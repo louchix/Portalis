@@ -15,10 +15,10 @@
             <h2>Upload de Blueprint pour Satisfactory</h2>
         </div>
         <div class="card-body">
-            <form id="uploadForm" enctype="multipart/form-data">
+            <form id="uploadForm" enctype="multipart/form-data" action="upload.php" method="post">
                 <div class="mb-3">
                     <label for="blueprintFiles" class="form-label">Sélectionnez un ou plusieurs fichiers (.sbp ou .sbpcfg) :</label>
-                    <input type="file" id="blueprintFiles" name="files" class="form-control" accept=".sbp, .sbpcfg" multiple required>
+                    <input type="file" id="blueprintFiles" name="files[]" class="form-control" accept=".sbp, .sbpcfg" multiple required>
                 </div>
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary">Uploader</button>
@@ -29,7 +29,6 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
