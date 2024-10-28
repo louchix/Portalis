@@ -1,58 +1,54 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json'); // Déclarer le type de contenu JSON
 
-// Définir le dossier d'upload
-$uploadDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints';
-$allowedExtensions = ['sbp', 'sbpcfg'];
-$response = ['success' => false, 'message' => ''];
+// Dossier où stocker les blueprints
+$target_dir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/";
+if (!file_exists($target_dir)) {
+    mkdir($target_dir, 0777, true); // Créer le répertoire si nécessaire
+}
 
-// Vérifiez si des fichiers ont été envoyés
-if (!isset($_FILES['files'])) {
-    $response['message'] = 'Aucun fichier reçu';
+// Variables pour la réponse JSON
+$response = array();
+
+// Vérifier si un fichier a été téléchargé
+if (!isset($_FILES['file'])) {
+    $response['error'] = 'Aucun fichier téléchargé.';
     echo json_encode($response);
     exit;
 }
 
-// Fonction pour nettoyer le nom de fichier
-function cleanFileName($filename) {
-    // Remplace les espaces et caractères spéciaux par un underscore "_"
-    return preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename);
+// Récupérer les informations du fichier
+$file = $_FILES['file'];
+$filename = basename($file['name']);
+$target_file = $target_dir . $filename;
+$fileExtension = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+// Types de fichiers valides
+$valid_extensions = array("sbp", "sbpcfg");
+
+// Vérifier si le fichier a une extension valide
+if (!in_array($fileExtension, $valid_extensions)) {
+    $response['error'] = 'Format de fichier non valide. Seuls les fichiers SBP et SBPCFG sont acceptés.';
+    echo json_encode($response);
+    exit;
 }
 
-foreach ($_FILES['files']['tmp_name'] as $index => $tmpFilePath) {
-    $fileName = basename($_FILES['files']['name'][$index]);
-    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-    // Nettoyer le nom de fichier pour éviter les caractères spéciaux
-    $cleanedFileName = cleanFileName($fileName);
-
-    // Vérifier l'extension
-    if (in_array($fileExt, $allowedExtensions)) {
-        $destination = "$uploadDir/$cleanedFileName";
-
-        // Vérifiez si le fichier existe déjà
-        if (file_exists($destination)) {
-            $response['message'] = "Le fichier $cleanedFileName existe déjà.";
-            echo json_encode($response);
-            exit;
-        }
-
-        // Tenter de déplacer le fichier téléchargé
-        if (move_uploaded_file($tmpFilePath, $destination)) {
-            $response['success'] = true;
-            $response['message'] = "Upload réussi pour le fichier $cleanedFileName.";
-        } else {
-            // Ajout d'un message d'erreur plus détaillé
-            $response['message'] = "Erreur lors de l'upload du fichier $cleanedFileName. Vérifiez les permissions et la validité du fichier.";
-            echo json_encode($response);
-            exit;
-        }
-    } else {
-        $response['message'] = "Extension non autorisée pour le fichier $fileName.";
-        echo json_encode($response);
-        exit;
-    }
+// Vérifier la taille du fichier (par exemple, 10 Go maximum)
+if ($file['size'] > 10000000000) {
+    $response['error'] = 'Le fichier est trop volumineux. Taille maximale : 10 Go.';
+    echo json_encode($response);
+    exit;
 }
 
+// Essayer de déplacer le fichier téléchargé vers le dossier cible
+if (move_uploaded_file($file['tmp_name'], $target_file)) {
+    error_log("Blueprint uploadé avec succès : " . $target_file);
+    $response['location'] = '/' . $target_file; // URL relative à partir de la racine du site
+} else {
+    error_log("Erreur lors du téléchargement du blueprint : " . print_r(error_get_last(), true));
+    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier.';
+}
+
+// Envoyer la réponse JSON
 echo json_encode($response);
 ?>
