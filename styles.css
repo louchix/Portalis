@@ -1,0 +1,31 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    max-width: 600px;
+    margin: auto;
+}
+
+.card-header {
+    background-color: #8C3061;
+}
+
+.btn-primary {
+    background-color: #C63C51;
+    border-color: #C63C51;
+}
+
+#status {
+    font-weight: bold;
+    color: #333;
+}
+
+#status.success {
+    color: #28a745;
+}
+
+#status.error {
+    color: #dc3545;
+}
