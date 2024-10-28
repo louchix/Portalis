@@ -11,18 +11,27 @@ if (!isset($_FILES['files'])) {
     exit;
 }
 
+// Fonction pour nettoyer le nom de fichier
+function cleanFileName($filename) {
+    // Remplace les espaces et caractères spéciaux par un underscore "_"
+    return preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename);
+}
+
 foreach ($_FILES['files']['tmp_name'] as $index => $tmpFilePath) {
     $fileName = basename($_FILES['files']['name'][$index]);
     $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
 
+    // Nettoyer le nom de fichier pour éviter les caractères spéciaux
+    $cleanedFileName = cleanFileName($fileName);
+
     if (in_array($fileExt, $allowedExtensions)) {
-        $destination = "$uploadDir/$fileName";
+        $destination = "$uploadDir/$cleanedFileName";
 
         if (move_uploaded_file($tmpFilePath, $destination)) {
             $response['success'] = true;
             $response['message'] = 'Upload réussi pour tous les fichiers !';
         } else {
-            $response['message'] = "Erreur lors de l'upload du fichier $fileName";
+            $response['message'] = "Erreur lors de l'upload du fichier $cleanedFileName. Vérifiez les permissions.";
             echo json_encode($response);
             exit;
         }
