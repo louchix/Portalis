@@ -45,9 +45,11 @@ if (move_uploaded_file($file['tmp_name'], $target_file)) {
     error_log("Blueprint uploadé avec succès : " . $target_file);
     $response['location'] = '/' . $target_file; // URL relative à partir de la racine du site
 } else {
+    // Enregistre l'erreur dans le journal d'erreurs
     error_log("Erreur lors du téléchargement du blueprint : " . print_r(error_get_last(), true));
-    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier.';
+    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier. ' . print_r(error_get_last(), true);
 }
+
 
 // Envoyer la réponse JSON
 echo json_encode($response);
