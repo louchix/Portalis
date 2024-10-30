@@ -41,50 +41,20 @@ if ($file['size'] > 10000000000) {
     exit;
 }
 
-// Essayer de déplacer le fichier téléchargé vers le dossier temporaire
-$temp_target_file = '/tmp/blueprints_upload/' . $filename;
+// Essayer de déplacer le fichier téléchargé vers le dossier cible
+error_log("Tentative de déplacement du fichier de " . $file['tmp_name'] . " vers " . $target_file);
 
-if (move_uploaded_file($file['tmp_name'], $temp_target_file)) {
-    // Déplacer le fichier vers le dossier cible avec sudo
-    exec('sudo mv ' . escapeshellarg($temp_target_file) . ' ' . escapeshellarg($target_file));
+if (move_uploaded_file($file['tmp_name'], $target_file)) {
+    // Changer le propriétaire du fichier après l'upload
     exec('sudo chown sfserver:sfserver ' . escapeshellarg($target_file));
     error_log("Blueprint uploadé avec succès : " . $target_file);
     $response['success'] = true;
     $response['message'] = 'Fichier uploadé avec succès';
     $response['location'] = $target_file;
 } else {
-    // Amélioration du débogage
-    $upload_error = $_FILES['file']['error'];
-    error_log("Code erreur upload : " . $upload_error);
-    error_log("Informations fichier : " . print_r($_FILES['file'], true));
-    error_log("Permissions dossier cible : " . substr(sprintf('%o', fileperms($target_dir)), -4));
-    error_log("Permissions dossier parent : " . substr(sprintf('%o', fileperms(dirname($target_file))), -4));
-    
-    $error_message = match($upload_error) {
-        UPLOAD_ERR_INI_SIZE => "Le fichier dépasse la taille maximale autorisée par PHP.ini",
-        UPLOAD_ERR_FORM_SIZE => "Le fichier dépasse la taille maximale autorisée par le formulaire",
-        UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement uploadé",
-        UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été uploadé",
-        UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant",
-        UPLOAD_ERR_CANT_WRITE => "Échec de l'écriture du fichier sur le disque",
-        UPLOAD_ERR_EXTENSION => "Une extension PHP a arrêté l'upload",
-        0 => "Erreur lors du déplacement du fichier : " . error_get_last()['message'] ?? 'Raison inconnue',
-        default => "Erreur inconnue (code: $upload_error)"
-    };
-    
-    error_log("Erreur upload : " . $error_message);
-    error_log("Chemin temporaire : " . $file['tmp_name']);
-    error_log("Chemin cible : " . $target_file);
-    
-    $response['success'] = false;
-    $response['error'] = $error_message;
-    $response['debug'] = [
-        'tmp_name' => $file['tmp_name'],
-        'target_file' => $target_file,
-        'error_code' => $upload_error,
-        'file_exists_tmp' => file_exists($file['tmp_name']) ? 'oui' : 'non',
-        'target_dir_writable' => is_writable($target_dir) ? 'oui' : 'non'
-    ];
+    // Enregistre l'erreur dans le journal d'erreurs
+    error_log("Erreur lors du téléchargement du blueprint : " . print_r(error_get_last(), true));
+    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier. ' . print_r(error_get_last(), true);
 }
 
 // Envoyer la réponse JSON
