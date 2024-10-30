@@ -4,7 +4,8 @@ header('Content-Type: application/json'); // Déclarer le type de contenu JSON
 // Dossier où stocker les blueprints
 $target_dir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/";
 if (!file_exists($target_dir)) {
-    mkdir($target_dir, 0777, true); // Créer le répertoire si nécessaire
+    // Utiliser sudo pour créer le répertoire en tant que sfserver
+    exec('sudo -u sfserver mkdir -p ' . escapeshellarg($target_dir));
 }
 
 // Variables pour la réponse JSON
@@ -42,6 +43,8 @@ if ($file['size'] > 10000000000) {
 
 // Essayer de déplacer le fichier téléchargé vers le dossier cible
 if (move_uploaded_file($file['tmp_name'], $target_file)) {
+    // Changer le propriétaire du fichier après l'upload
+    exec('sudo chown sfserver:sfserver ' . escapeshellarg($target_file));
     error_log("Blueprint uploadé avec succès : " . $target_file);
     $response['success'] = true;
     $response['message'] = 'Fichier uploadé avec succès';
