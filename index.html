@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portalis</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // Fonction pour récupérer le statut du serveur
+        function fetchServerStatus() {
+            fetch('server_status.php')
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('status');
+                    statusElement.textContent = data.status === 'ON' ? 'Le serveur est en cours d\'exécution.' : 'Le serveur est arrêté.';
+                    statusElement.className = data.status === 'ON' ? 'success' : 'error';
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération du statut du serveur:', error);
+                });
+        }
+
+        // Appeler la fonction au chargement de la page
+        window.onload = fetchServerStatus;
+    </script>
 </head>
 <body>
     <div class="container">
@@ -15,7 +33,7 @@
                 <h2>État du Serveur</h2>
             </div>
             <div class="card-body">
-                <p id="status" class="success">Le serveur est en cours d'exécution.</p>
+                <p id="status" class="success">Chargement...</p> <!-- Texte par défaut -->
                 <div class="button-group">
                     <button class="btn btn-success">Démarrer le serveur</button>
                     <button class="btn btn-danger">Arrêter le serveur</button>
