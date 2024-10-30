@@ -1,14 +1,12 @@
 <?php
 header('Content-Type: application/json');
 
-$output = [];
+// Exécuter le script shell et récupérer uniquement la réponse du echo
+$status = exec("sh /home/sfserver/script/startup.sh 2>&1", $output, $return_var);
 
-// Exécuter le script shell pour vérifier le statut du serveur
-exec("sh /home/sfserver/script/startup.sh", $output, $return_var);
-
-// Retourner simplement la sortie brute en JSON
+// Retourner uniquement le statut
 echo json_encode([
-    'output' => $output,
+    'status' => trim($status), // On utilise trim pour enlever les espaces inutiles
     'return_var' => $return_var
 ]);
 ?> 
