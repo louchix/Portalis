@@ -5,7 +5,7 @@ $output = [];
 $status = 'OFF'; // Valeur par défaut
 
 // Exécuter le script shell pour vérifier le statut du serveur
-exec("/home/sfserver/script/startup.sh", $output, $return_var);
+exec("sh /home/sfserver/script/startup.sh", $output, $return_var);
 
 // Vérifier le statut dans la sortie
 if (isset($output[0])) {
