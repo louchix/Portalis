@@ -58,6 +58,7 @@ if (move_uploaded_file($file['tmp_name'], $temp_target_file)) {
     error_log("Code erreur upload : " . $upload_error);
     error_log("Informations fichier : " . print_r($_FILES['file'], true));
     error_log("Permissions dossier cible : " . substr(sprintf('%o', fileperms($target_dir)), -4));
+    error_log("Permissions dossier parent : " . substr(sprintf('%o', fileperms(dirname($target_file))), -4));
     
     $error_message = match($upload_error) {
         UPLOAD_ERR_INI_SIZE => "Le fichier dépasse la taille maximale autorisée par PHP.ini",
