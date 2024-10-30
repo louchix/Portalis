@@ -5,7 +5,7 @@ $output = [];
 $status = 'OFF'; // Valeur par défaut
 
 // Exécuter le script shell
-exec("cd /home/sfserver && ./sfserver details > startup.txt && grep 'STARTED' startup.txt", $output, $return_var);
+exec("cd /home/sfserver && ./sfserver details > startup.txt && grep -q 'STARTED' startup.txt", $output, $return_var);
 
 // Vérifier le statut
 if ($return_var === 0) {
@@ -14,6 +14,10 @@ if ($return_var === 0) {
     $status = 'OFF';
 }
 
-// Retourner le statut en JSON
-echo json_encode(['status' => $status]);
+// Retourner le statut, l'output et le code de retour en JSON
+echo json_encode([
+    'status' => $status,
+    'output' => $output,
+    'return_var' => $return_var
+]);
 ?> 
