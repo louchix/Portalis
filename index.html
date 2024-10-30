@@ -14,6 +14,10 @@
                     const statusElement = document.getElementById('status');
                     statusElement.textContent = data.status === 'ON' ? 'Le serveur est en cours d\'exécution.' : 'Le serveur est arrêté.';
                     statusElement.className = data.status === 'ON' ? 'success' : 'error';
+
+                    // Afficher l'output et le code de retour dans la console pour le débogage
+                    console.log('Output:', data.output);
+                    console.log('Return Code:', data.return_var);
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération du statut du serveur:', error);
