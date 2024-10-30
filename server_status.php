@@ -8,10 +8,14 @@ $status = 'OFF'; // Valeur par défaut
 exec("cd /home/sfserver && ./sfserver details > startup.txt && tail -n 1 startup.txt", $output, $return_var);
 
 // Vérifier le statut
-if (isset($output[0]) && strpos($output[0], "STARTED") !== false) {
-    $status = 'ON';
-} else {
-    $status = 'OFF';
+if (isset($output[0]) && strpos($output[0], "Status:") !== false) {
+    // Extraire le statut de la ligne
+    preg_match('/Status:\s*\[32m(.*?)\[0m/', $output[0], $matches);
+    if (isset($matches[1]) && trim($matches[1]) === "STARTED") {
+        $status = 'ON';
+    } else {
+        $status = 'OFF';
+    }
 }
 
 // Retourner le statut, l'output et le code de retour en JSON
