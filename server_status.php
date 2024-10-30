@@ -5,7 +5,7 @@ $output = [];
 $status = 'OFF'; // Valeur par défaut
 
 // Exécuter le script shell
-exec("cd /home/sfserver && ./sfserver details > startup.txt && grep -q 'STARTED' startup.txt", $output, $return_var);
+exec("cd /home/sfserver && ./sfserver details > startup.txt && grep 'STARTED' startup.txt", $output, $return_var);
 
 // Vérifier le statut
 if ($return_var === 0) {
