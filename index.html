@@ -12,8 +12,8 @@
                 .then(response => response.json())
                 .then(data => {
                     const statusElement = document.getElementById('status');
-                    statusElement.textContent = data.status === 'ON' ? 'Le serveur est en cours d\'exécution.' : 'Le serveur est arrêté.';
-                    statusElement.className = data.status === 'ON' ? 'success' : 'error';
+                    statusElement.textContent = data.status;
+                    statusElement.className = data.status === 'Serveur ON' ? 'success' : 'error';
 
                     // Afficher l'output et le code de retour dans la console pour le débogage
                     console.log('Output:', data.output);
