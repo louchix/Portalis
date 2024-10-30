@@ -8,7 +8,7 @@ $status = 'OFF'; // Valeur par défaut
 exec("cd /home/sfserver && ./sfserver details > startup.txt && tail -n 1 startup.txt", $output, $return_var);
 
 // Vérifier le statut
-if (isset($output[0]) && trim($output[0]) === "Status: STARTED") {
+if (isset($output[0]) && strpos($output[0], "STARTED") !== false) {
     $status = 'ON';
 } else {
     $status = 'OFF';
