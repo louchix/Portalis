@@ -41,9 +41,12 @@ if ($file['size'] > 10000000000) {
     exit;
 }
 
-// Essayer de déplacer le fichier téléchargé vers le dossier cible
-if (move_uploaded_file($file['tmp_name'], $target_file)) {
-    // Changer le propriétaire du fichier après l'upload
+// Essayer de déplacer le fichier téléchargé vers le dossier temporaire
+$temp_target_file = '/tmp/blueprints_upload/' . $filename;
+
+if (move_uploaded_file($file['tmp_name'], $temp_target_file)) {
+    // Déplacer le fichier vers le dossier cible avec sudo
+    exec('sudo mv ' . escapeshellarg($temp_target_file) . ' ' . escapeshellarg($target_file));
     exec('sudo chown sfserver:sfserver ' . escapeshellarg($target_file));
     error_log("Blueprint uploadé avec succès : " . $target_file);
     $response['success'] = true;
