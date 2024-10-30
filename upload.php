@@ -43,11 +43,29 @@ if ($file['size'] > 10000000000) {
 // Essayer de déplacer le fichier téléchargé vers le dossier cible
 if (move_uploaded_file($file['tmp_name'], $target_file)) {
     error_log("Blueprint uploadé avec succès : " . $target_file);
-    $response['location'] = '/' . $target_file; // URL relative à partir de la racine du site
+    $response['success'] = true;
+    $response['message'] = 'Fichier uploadé avec succès';
+    $response['location'] = $target_file;
 } else {
-    // Enregistre l'erreur dans le journal d'erreurs
-    error_log("Erreur lors du téléchargement du blueprint : " . print_r(error_get_last(), true));
-    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier. ' . print_r(error_get_last(), true);
+    // Amélioration du débogage
+    $upload_error = $_FILES['file']['error'];
+    $error_message = match($upload_error) {
+        UPLOAD_ERR_INI_SIZE => "Le fichier dépasse la taille maximale autorisée par PHP.ini",
+        UPLOAD_ERR_FORM_SIZE => "Le fichier dépasse la taille maximale autorisée par le formulaire",
+        UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement uploadé",
+        UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été uploadé",
+        UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant",
+        UPLOAD_ERR_CANT_WRITE => "Échec de l'écriture du fichier sur le disque",
+        UPLOAD_ERR_EXTENSION => "Une extension PHP a arrêté l'upload",
+        default => "Erreur inconnue"
+    };
+    
+    error_log("Erreur upload : Code " . $upload_error . " - " . $error_message);
+    error_log("Chemin temporaire : " . $file['tmp_name']);
+    error_log("Chemin cible : " . $target_file);
+    
+    $response['success'] = false;
+    $response['error'] = $error_message;
 }
 
 
