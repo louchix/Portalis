@@ -2,7 +2,7 @@
 header('Content-Type: application/json'); // Déclarer le type de contenu JSON
 
 // Dossier où stocker les blueprints
-$target_dir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/";
+$target_dir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory";
 if (!file_exists($target_dir)) {
     // Utiliser sudo pour créer le répertoire en tant que sfserver
     exec('sudo -u sfserver mkdir -p ' . escapeshellarg($target_dir));
