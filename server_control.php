@@ -9,8 +9,8 @@ if (!in_array($action, ['start', 'stop', 'restart'])) {
     exit;
 }
 
-// Exécuter la commande correspondante
-$command = "/home/sfserver/sfserver $action";
+// Exécuter la commande correspondante avec sudo
+$command = "sudo -u sfserver /home/sfserver/sfserver $action";
 $status = exec("$command 2>&1", $output, $return_var);
 
 // Vérifiez si la commande a échoué
