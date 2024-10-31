@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Exécuter le script shell et récupérer uniquement la réponse du echo
-$status = exec("sh /home/sfserver/script/startup.sh 2>&1", $output, $return_var);
+$status = exec("/home/sfserver/script/startup.sh 2>&1", $output, $return_var);
 
 // Vérifiez si le script a échoué
 if ($return_var !== 0) {
