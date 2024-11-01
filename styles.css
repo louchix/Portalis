@@ -97,9 +97,9 @@ body {
     display: inline-block;
     padding: 10px 20px;
     cursor: pointer;
-    border: 1px solid #007bff;
+    border: 1px solid #28a745;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     text-align: center;
     transition: background-color 0.3s, border-color 0.3s;
@@ -112,6 +112,6 @@ body {
 }
 
 .custom-file-upload:hover {
-    background-color: #0056b3; /* Couleur de fond au survol */
-    border-color: #0056b3; /* Couleur de bordure au survol */
+    background-color: #218838;
+    border-color: #218838;
 }
