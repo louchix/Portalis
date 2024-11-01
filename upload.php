@@ -6,18 +6,8 @@ $targetFile = $targetDir . basename($_FILES["file"]["name"]);
 $uploadOk = 1;
 $message = "";
 
-// Vérifiez si le fichier est une image ou un document
+// Vérifiez si le fichier est un fichier valide
 $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-if (isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["file"]["tmp_name"]);
-    if ($check !== false) {
-        $message = "Le fichier est un fichier valide.";
-        $uploadOk = 1;
-    } else {
-        $message = "Le fichier n'est pas un fichier valide.";
-        $uploadOk = 0;
-    }
-}
 
 // Vérifiez si le fichier existe déjà
 if (file_exists($targetFile)) {
@@ -31,9 +21,9 @@ if ($_FILES["file"]["size"] > 500000) { // Limite de 500 Ko
     $uploadOk = 0;
 }
 
-// Autoriser certains formats de fichier
-if ($fileType != "jpg" && $fileType != "png" && $fileType != "jpeg" && $fileType != "gif" && $fileType != "pdf") {
-    $message = "Désolé, seuls les fichiers JPG, JPEG, PNG, GIF et PDF sont autorisés.";
+// Autoriser uniquement les formats de fichier .sbp et .sbpcfg
+if ($fileType != "sbp" && $fileType != "sbpcfg") {
+    $message = "Désolé, seuls les fichiers SBP et SBPCFG sont autorisés.";
     $uploadOk = 0;
 }
 
