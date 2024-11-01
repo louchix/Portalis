@@ -35,6 +35,8 @@ body {
     border-radius: 5px;
     font-size: 16px;
     margin-right: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .btn-primary {
@@ -73,6 +75,20 @@ body {
 
 .button-group {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-top: 20px;
+}
+
+.button-group .btn {
+    margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+    .button-group {
+        flex-direction: row;
+    }
+
+    .button-group .btn {
+        margin-bottom: 0;
+    }
 }
