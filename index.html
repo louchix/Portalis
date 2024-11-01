@@ -24,6 +24,59 @@
                 });
         }
 
+        // Fonction pour gérer l'upload
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('uploadForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const statusDiv = document.getElementById('status');
+                statusDiv.textContent = 'Envoi en cours...';
+                statusDiv.className = '';
+
+                fetch('upload.php', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    statusDiv.textContent = data.message;
+                    statusDiv.className = data.success ? 'success' : 'error';
+                })
+                .catch(error => {
+                    statusDiv.textContent = 'Erreur lors de l’envoi';
+                    statusDiv.className = 'error';
+                });
+            });
+        });
+
+        // Fonction pour démarrer, arrêter ou redémarrer le serveur
+        function controlServer(action) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = `${action.charAt(0).toUpperCase() + action.slice(1)} en cours...`;
+            statusDiv.className = '';
+
+            fetch(`server_control.php?action=${action}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                statusDiv.textContent = data.status;
+                statusDiv.className = data.status === 'Serveur ON' ? 'success' : 'error';
+            })
+            .catch(error => {
+                statusDiv.textContent = 'Erreur lors de l\'exécution de l\'action';
+                statusDiv.className = 'error';
+            });
+        }
+
+        // Ajout des écouteurs d'événements pour les boutons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('startButton').addEventListener('click', () => controlServer('start'));
+            document.getElementById('stopButton').addEventListener('click', () => controlServer('stop'));
+            document.getElementById('restartButton').addEventListener('click', () => controlServer('restart'));
+        });
+
         // Appeler la fonction au chargement de la page
         window.onload = fetchServerStatus;
     </script>
@@ -48,12 +101,91 @@
 
         <div class="card">
             <div class="card-header">
+                <h2>Upload de Fichiers</h2>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" name="file" required>
+                    <button type="submit" class="btn btn-primary">Uploader</button>
+                </form>
+                <p id="uploadStatus"></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
                 <h2>Logs du Serveur</h2>
             </div>
             <div class="card-body">
                 <p>Aucun log disponible pour le moment.</p>
             </div>
         </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <p>Paramètres de configuration actuels.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <p>Paramètres de configuration actuels.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+</body>
+</html>
+
+</html>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+</body>
+</html>
+
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <p>Paramètres de configuration actuels.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <p>Paramètres de configuration actuels.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+        </div>
+    </div>
+</body>
+</html>
 
         <div class="card">
             <div class="card-header">
