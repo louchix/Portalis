@@ -35,7 +35,7 @@
             });
 
             document.getElementById('uploadForm').addEventListener('submit', function(event) {
-                event.preventDefault();
+                event.preventDefault(); // Empêcher le comportement par défaut du formulaire
 
                 const formData = new FormData(this);
                 const statusDiv = document.getElementById('status');
@@ -114,7 +114,7 @@
                 <h2>Upload de Blueprint</h2>
             </div>
             <div class="card-body">
-                <form id="uploadForm" enctype="multipart/form-data">
+                <form id="uploadForm" enctype="multipart/form-data" action="upload.php" method="POST">
                     <label class="custom-file-upload">
                         <input type="file" name="file" id="fileInput" required>
                         Parcourir
