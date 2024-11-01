@@ -1,62 +1,50 @@
 <?php
-header('Content-Type: application/json'); // Déclarer le type de contenu JSON
+header('Content-Type: application/json');
 
-// Dossier où stocker les blueprints
-$target_dir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/";
-if (!file_exists($target_dir)) {
-    // Utiliser sudo pour créer le répertoire en tant que sfserver
-    exec('sudo -u sfserver mkdir -p ' . escapeshellarg($target_dir));
+$targetDir = "blueprint/"; // Dossier de destination
+$targetFile = $targetDir . basename($_FILES["file"]["name"]);
+$uploadOk = 1;
+$message = "";
+
+// Vérifiez si le fichier est une image ou un document
+$fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+if (isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["file"]["tmp_name"]);
+    if ($check !== false) {
+        $message = "Le fichier est un fichier valide.";
+        $uploadOk = 1;
+    } else {
+        $message = "Le fichier n'est pas un fichier valide.";
+        $uploadOk = 0;
+    }
 }
 
-// Variables pour la réponse JSON
-$response = array();
-
-// Vérifier si un fichier a été téléchargé
-if (!isset($_FILES['file'])) {
-    $response['error'] = 'Aucun fichier téléchargé.';
-    echo json_encode($response);
-    exit;
+// Vérifiez si le fichier existe déjà
+if (file_exists($targetFile)) {
+    $message = "Désolé, le fichier existe déjà.";
+    $uploadOk = 0;
 }
 
-// Récupérer les informations du fichier
-$file = $_FILES['file'];
-$filename = basename($file['name']);
-$target_file = $target_dir . $filename;
-$fileExtension = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-// Types de fichiers valides
-$valid_extensions = array("sbp", "sbpcfg");
-
-// Vérifier si le fichier a une extension valide
-if (!in_array($fileExtension, $valid_extensions)) {
-    $response['error'] = 'Format de fichier non valide. Seuls les fichiers SBP et SBPCFG sont acceptés.';
-    echo json_encode($response);
-    exit;
+// Vérifiez la taille du fichier
+if ($_FILES["file"]["size"] > 500000) { // Limite de 500 Ko
+    $message = "Désolé, votre fichier est trop gros.";
+    $uploadOk = 0;
 }
 
-// Vérifier la taille du fichier (par exemple, 10 Go maximum)
-if ($file['size'] > 10000000000) {
-    $response['error'] = 'Le fichier est trop volumineux. Taille maximale : 10 Go.';
-    echo json_encode($response);
-    exit;
+// Autoriser certains formats de fichier
+if ($fileType != "jpg" && $fileType != "png" && $fileType != "jpeg" && $fileType != "gif" && $fileType != "pdf") {
+    $message = "Désolé, seuls les fichiers JPG, JPEG, PNG, GIF et PDF sont autorisés.";
+    $uploadOk = 0;
 }
 
-// Essayer de déplacer le fichier téléchargé vers le dossier cible
-error_log("Tentative de déplacement du fichier de " . $file['tmp_name'] . " vers " . $target_file);
-
-if (move_uploaded_file($file['tmp_name'], $target_file)) {
-    // Changer le propriétaire du fichier après l'upload
-    exec('sudo chown sfserver:sfserver ' . escapeshellarg($target_file));
-    error_log("Blueprint uploadé avec succès : " . $target_file);
-    $response['success'] = true;
-    $response['message'] = 'Fichier uploadé avec succès';
-    $response['location'] = $target_file;
+// Vérifiez si $uploadOk est défini sur 0 par une erreur
+if ($uploadOk == 0) {
+    echo json_encode(['success' => false, 'message' => $message]);
 } else {
-    // Enregistre l'erreur dans le journal d'erreurs
-    error_log("Erreur lors du téléchargement du blueprint : " . print_r(error_get_last(), true));
-    $response['error'] = 'Une erreur s\'est produite lors du téléchargement du fichier. ' . print_r(error_get_last(), true);
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+        echo json_encode(['success' => true, 'message' => "Le fichier ". htmlspecialchars(basename($_FILES["file"]["name"])). " a été uploadé."]);
+    } else {
+        echo json_encode(['success' => false, 'message' => "Désolé, une erreur est survenue lors de l'upload de votre fichier."]);
+    }
 }
-
-// Envoyer la réponse JSON
-echo json_encode($response);
 ?>

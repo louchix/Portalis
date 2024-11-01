@@ -14,51 +14,11 @@
                     const statusElement = document.getElementById('status');
                     statusElement.textContent = data.status;
                     statusElement.className = data.status === 'Serveur ON' ? 'success' : 'error';
-
-                    // Afficher l'output et le code de retour dans la console pour le débogage
-                    console.log('Output:', data.output);
-                    console.log('Return Code:', data.return_var);
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération du statut du serveur:', error);
                 });
         }
-
-        // Fonction pour gérer l'upload
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('fileInput');
-            const fileNameDisplay = document.getElementById('fileName');
-
-            fileInput.addEventListener('change', function() {
-                const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'Aucun fichier sélectionné';
-                fileNameDisplay.textContent = fileName; // Mettre à jour le nom du fichier affiché
-            });
-
-            document.getElementById('uploadForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Empêcher le comportement par défaut du formulaire
-
-                const formData = new FormData(this);
-                const statusDiv = document.getElementById('status');
-                statusDiv.textContent = 'Envoi en cours...';
-                statusDiv.className = '';
-
-                fetch('upload.php', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    statusDiv.textContent = data.message;
-                    statusDiv.className = data.success ? 'success' : 'error';
-                    document.getElementById('uploadStatus').textContent = data.success ? 'Fichier uploadé avec succès.' : 'Erreur lors de l\'upload du fichier.'; // État de l'upload
-                })
-                .catch(error => {
-                    statusDiv.textContent = 'Erreur lors de l’envoi';
-                    statusDiv.className = 'error';
-                    document.getElementById('uploadStatus').textContent = 'Erreur lors de l\'upload du fichier.'; // État de l'upload
-                });
-            });
-        });
 
         // Fonction pour démarrer, arrêter ou redémarrer le serveur
         function controlServer(action) {
@@ -119,10 +79,10 @@
                         <input type="file" name="file" id="fileInput" required>
                         Parcourir
                     </label>
-                    <span id="fileName" class="file-name">Aucun fichier sélectionné</span>
+                    <span id="fileName" class="file-name">Aucun fichier sélectionné</span> <!-- Affichage du nom du fichier -->
                     <button type="submit" class="btn btn-primary">Uploader</button>
                 </form>
-                <p id="uploadStatus"></p>
+                <p id="uploadStatus"></p> <!-- État de l'upload -->
             </div>
         </div>
     </div>
