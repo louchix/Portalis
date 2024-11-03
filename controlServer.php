@@ -26,37 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         exit;
     }
 
-    $tempFile = "/tmp/$fileName";
+    $destinationFile = $uploadDir . $fileName;
 
-    // Déplacer le fichier vers un emplacement temporaire
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $tempFile)) {
-        logMessage("Fichier déplacé vers $tempFile", $logOutput);
+    // Déplacer le fichier directement vers le répertoire de destination
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $destinationFile)) {
+        logMessage("Fichier déplacé vers $destinationFile", $logOutput);
 
-        // Copier le fichier dans le répertoire de destination
-        $destinationFile = $uploadDir . $fileName;
-        if (copy($tempFile, $destinationFile)) {
-            logMessage("Fichier copié vers $destinationFile", $logOutput);
+        // Utiliser sudo pour changer le propriétaire du fichier
+        $command = "sudo chown sfserver:sfserver '$destinationFile'";
+        logMessage("Exécution de la commande: $command", $logOutput);
+        $output = shell_exec($command);
+        logMessage("Sortie de la commande: $output", $logOutput);
 
-            // Utiliser sudo pour changer le propriétaire du fichier
-            $command = "sudo chown sfserver:sfserver '$destinationFile'";
-            logMessage("Exécution de la commande: $command", $logOutput);
-            $output = shell_exec($command);
-            logMessage("Sortie de la commande: $output", $logOutput);
-
-            if ($output === null) {
-                logMessage("Erreur lors du changement de propriétaire du fichier.", $logOutput);
-                echo "Erreur lors du changement de propriétaire du fichier.\n" . $logOutput;
-            } else {
-                logMessage("Fichier uploadé et propriétaire changé avec succès.", $logOutput);
-                echo "Fichier uploadé et propriétaire changé avec succès.\n" . $logOutput;
-            }
+        if ($output === null) {
+            logMessage("Erreur lors du changement de propriétaire du fichier.", $logOutput);
+            echo "Erreur lors du changement de propriétaire du fichier.\n" . $logOutput;
         } else {
-            logMessage("Erreur lors de la copie du fichier.", $logOutput);
-            echo "Erreur lors de la copie du fichier.\n" . $logOutput;
+            logMessage("Fichier uploadé et propriétaire changé avec succès.", $logOutput);
+            echo "Fichier uploadé et propriétaire changé avec succès.\n" . $logOutput;
         }
     } else {
-        logMessage("Erreur lors de l'upload du fichier temporaire.", $logOutput);
-        echo "Erreur lors de l'upload.\n" . $logOutput;
+        logMessage("Erreur lors du déplacement du fichier.", $logOutput);
+        echo "Erreur lors du déplacement du fichier.\n" . $logOutput;
     }
 }
 
