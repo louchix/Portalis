@@ -55,3 +55,22 @@ function uploadBlueprint() {
         console.error('Erreur:', error);
     });
 }
+
+function controlServer(action) {
+    console.log(`Action du serveur: ${action}`);
+    fetch(`https://axiiom.org/controlServer.php?action=${action}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau : ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(data => {
+        console.log('Réponse du serveur traitée.');
+        console.log('Logs du serveur :\n' + data);
+        alert(data.split('\n')[0]); // Affiche uniquement le premier message à l'utilisateur
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+    });
+}
