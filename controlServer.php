@@ -39,9 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_GET['action'];
+    logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
         // Exécuter le script pour vérifier l'état du serveur
         $status = shell_exec("sudo -u sfserver /home/sfserver/script/startup.sh");
+        logMessage("État du serveur récupéré: $status", $logOutput);
         echo trim($status); // Retourne "serveur ON" ou "serveur OFF"
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         logMessage("Exécution de l'action serveur: $action", $logOutput);

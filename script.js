@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM entièrement chargé et analysé.');
+    
     document.getElementById('fileInput').addEventListener('change', function() {
         const fileNameSpan = document.querySelector('.file-name');
         const file = this.files[0];
@@ -46,6 +48,7 @@ function uploadBlueprint() {
         body: formData
     })
     .then(response => {
+        console.log('Réponse reçue du serveur pour l\'upload.');
         if (!response.ok) {
             throw new Error('Erreur réseau : ' + response.statusText);
         }
@@ -65,6 +68,7 @@ function controlServer(action) {
     console.log(`Action du serveur: ${action}`);
     fetch(`https://axiiom.org/controlServer.php?action=${action}`)
     .then(response => {
+        console.log(`Réponse reçue du serveur pour l'action ${action}.`);
         if (!response.ok) {
             throw new Error('Erreur réseau : ' + response.statusText);
         }
@@ -84,6 +88,7 @@ function checkServerStatus() {
     console.log('Vérification de l\'état du serveur...');
     fetch('https://axiiom.org/controlServer.php?action=status')
     .then(response => {
+        console.log('Réponse reçue du serveur pour le statut.');
         if (!response.ok) {
             throw new Error('Erreur réseau : ' + response.statusText);
         }
