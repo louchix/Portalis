@@ -98,6 +98,7 @@ function checkServerStatus() {
         const statusElement = document.getElementById('serverStatus');
         statusElement.textContent = `État du serveur : ${status}`;
         console.log(`État du serveur récupéré : ${status}`);
+        console.log('Logs du serveur :\n' + status); // Affiche les logs du serveur
     })
     .catch(error => {
         console.error('Erreur lors de la vérification de l\'état du serveur:', error);
