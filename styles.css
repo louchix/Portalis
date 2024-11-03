@@ -8,6 +8,10 @@ body {
     margin-bottom: 20px;
 }
 
+.file.has-name {
+    margin-bottom: 20px;
+}
+
 .buttons {
     display: flex;
     justify-content: center;
