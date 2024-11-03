@@ -42,12 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
         // Commande pour vérifier l'état du serveur
-        $command = "sudo -u sfserver sh/home/sfserver/script/startup.sh 2>&1";
+        $command = "sudo -u sfserver /home/sfserver/script/startup.sh 2>&1";
         logMessage("Exécution de la commande: $command", $logOutput);
         $status = shell_exec($command);
-        $lines = explode("\n", trim($status));
-        $status = end($lines); // Récupère la dernière ligne
-        logMessage("État du serveur récupéré: $status", $logOutput);
+        if ($status === null) {
+            logMessage("Erreur lors de l'exécution de la commande.", $logOutput);
+        } else {
+            $lines = explode("\n", trim($status));
+            $status = end($lines); // Récupère la dernière ligne
+            logMessage("État du serveur récupéré: $status", $logOutput);
+        }
         echo $status; // Retourne uniquement la dernière ligne
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         // Commande pour contrôler le serveur
