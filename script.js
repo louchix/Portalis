@@ -29,7 +29,9 @@ function uploadBlueprint() {
         body: formData
     })
     .then(response => {
-        console.log('Réponse reçue du serveur.');
+        if (!response.ok) {
+            throw new Error('Erreur réseau : ' + response.statusText);
+        }
         return response.text();
     })
     .then(data => {
