@@ -12,7 +12,11 @@ function logMessage($message, &$logOutput) {
 $logOutput = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $uploadDir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu\ Factory/";
+    $ftpServer = "axiiom.org"; // Remplacez par l'adresse de votre serveur FTP
+    $ftpUsername = "sfserver"; // Remplacez par votre nom d'utilisateur FTP
+    $ftpPassword = "!Zaya12131213"; // Remplacez par votre mot de passe FTP
+    $uploadDir = ".config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory"; // Chemin sur le serveur FTP
+
     $fileName = basename($_FILES['file']['name']);
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     $allowedExtensions = ['sbp', 'sbpcfg'];
@@ -26,29 +30,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         exit;
     }
 
-    $destinationFile = $uploadDir . $fileName;
+    // Connexion au serveur FTP
+    $ftpConn = ftp_connect($ftpServer) or die("Could not connect to $ftpServer");
+    $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
 
-    // Déplacer le fichier directement vers le répertoire de destination
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $destinationFile)) {
-        logMessage("Fichier déplacé vers $destinationFile", $logOutput);
-
-        // Utiliser sudo pour changer le propriétaire du fichier
-        $command = "sudo chown sfserver:sfserver '$destinationFile'";
-        logMessage("Exécution de la commande: $command", $logOutput);
-        $output = shell_exec($command);
-        logMessage("Sortie de la commande: $output", $logOutput);
-
-        if ($output === null) {
-            logMessage("Erreur lors du changement de propriétaire du fichier.", $logOutput);
-            echo "Erreur lors du changement de propriétaire du fichier.\n" . $logOutput;
-        } else {
-            logMessage("Fichier uploadé et propriétaire changé avec succès.", $logOutput);
-            echo "Fichier uploadé et propriétaire changé avec succès.\n" . $logOutput;
-        }
-    } else {
-        logMessage("Erreur lors du déplacement du fichier.", $logOutput);
-        echo "Erreur lors du déplacement du fichier.\n" . $logOutput;
+    if (!$login) {
+        logMessage("Connexion FTP échouée.", $logOutput);
+        echo "Erreur de connexion FTP.\n" . $logOutput;
+        exit;
     }
+
+    // Téléchargement du fichier
+    $destinationFile = $uploadDir . $fileName;
+    if (ftp_put($ftpConn, $destinationFile, $_FILES['file']['tmp_name'], FTP_BINARY)) {
+        logMessage("Fichier uploadé vers $destinationFile", $logOutput);
+        echo "Fichier uploadé avec succès.\n" . $logOutput;
+    } else {
+        logMessage("Erreur lors de l'upload FTP.", $logOutput);
+        echo "Erreur lors de l'upload FTP.\n" . $logOutput;
+    }
+
+    // Fermer la connexion FTP
+    ftp_close($ftpConn);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
