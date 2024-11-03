@@ -46,7 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         exit;
     }
 
-    logMessage("Connexion FTP réussie.", $logOutput);
+    // Activer le mode passif
+    ftp_pasv($ftpConn, true);
+    logMessage("Connexion FTP réussie en mode passif.", $logOutput);
 
     // Téléchargement du fichier
     $destinationFile = $uploadDir . $fileName;
