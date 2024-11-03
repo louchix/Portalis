@@ -1,13 +1,18 @@
-document.getElementById('fileInput').addEventListener('change', function() {
-    const fileNameSpan = document.querySelector('.file-name');
-    const file = this.files[0];
-    if (file) {
-        fileNameSpan.textContent = file.name;
-        console.log(`Fichier sélectionné: ${file.name}`);
-    } else {
-        fileNameSpan.textContent = 'Aucun fichier sélectionné';
-        console.log('Aucun fichier sélectionné.');
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('fileInput').addEventListener('change', function() {
+        const fileNameSpan = document.querySelector('.file-name');
+        const file = this.files[0];
+        if (file) {
+            fileNameSpan.textContent = file.name;
+            console.log(`Fichier sélectionné: ${file.name}`);
+        } else {
+            fileNameSpan.textContent = 'Aucun fichier sélectionné';
+            console.log('Aucun fichier sélectionné.');
+        }
+    });
+
+    // Vérifier l'état du serveur dès que la page est chargée
+    checkServerStatus();
 });
 
 function uploadBlueprint() {
