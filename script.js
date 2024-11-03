@@ -24,7 +24,7 @@ function uploadBlueprint() {
     formData.append('file', file);
     console.log('FormData créé avec le fichier.');
 
-    fetch('https://example.com/controlServer.php', {
+    fetch('https://axxiom.org/controlServer.php', {
         method: 'POST',
         body: formData
     })
