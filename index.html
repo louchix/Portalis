@@ -37,6 +37,19 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('fileInput').addEventListener('change', function() {
+                const fileNameSpan = document.querySelector('.file-name');
+                const file = this.files[0];
+                if (file) {
+                    fileNameSpan.textContent = file.name;
+                } else {
+                    fileNameSpan.textContent = 'Aucun fichier sélectionné';
+                }
+            });
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
