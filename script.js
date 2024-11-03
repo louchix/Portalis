@@ -74,3 +74,18 @@ function controlServer(action) {
         console.error('Erreur:', error);
     });
 }
+
+function checkServerStatus() {
+    fetch('https://axiiom.org/controlServer.php?action=status')
+    .then(response => response.text())
+    .then(status => {
+        const statusElement = document.getElementById('serverStatus');
+        statusElement.textContent = `État du serveur : ${status}`;
+    })
+    .catch(error => {
+        console.error('Erreur lors de la vérification de l\'état du serveur:', error);
+    });
+}
+
+// Vérifier l'état du serveur toutes les 10 secondes
+setInterval(checkServerStatus, 10000);
