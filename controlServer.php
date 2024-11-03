@@ -12,7 +12,7 @@ function logMessage($message, &$logOutput) {
 $logOutput = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $uploadDir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/";
+    $uploadDir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu\ Factory/";
     $fileName = basename($_FILES['file']['name']);
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     $allowedExtensions = ['sbp', 'sbpcfg'];
