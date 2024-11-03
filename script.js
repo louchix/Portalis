@@ -1,3 +1,13 @@
+document.getElementById('fileInput').addEventListener('change', function() {
+    const fileNameSpan = document.querySelector('.file-name');
+    const file = this.files[0];
+    if (file) {
+        fileNameSpan.textContent = file.name;
+    } else {
+        fileNameSpan.textContent = 'Aucun fichier sélectionné';
+    }
+});
+
 function uploadBlueprint() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
