@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_GET['action'];
     if (in_array($action, ['start', 'stop', 'restart'])) {
         logMessage("Exécution de l'action serveur: $action", $logOutput);
-        $output = shell_exec("cd /home/sfserver && ./sfserver $action");
+        $output = shell_exec("sudo -u sfserver /home/sfserver/sfserver $action");
         logMessage("Résultat de l'action: $output", $logOutput);
         echo "Serveur $action avec succès.\n" . $logOutput;
     }
