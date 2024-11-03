@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         echo $status; // Retourne uniquement la dernière ligne
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         // Commande pour contrôler le serveur
-        $command = "sudo sfserver /home/sfserver/sfserver $action 2>&1";
+        $command = "sudo -u sfserver /home/sfserver/sfserver $action 2>&1";
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
