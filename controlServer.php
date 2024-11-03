@@ -12,12 +12,7 @@ function logMessage($message, &$logOutput) {
 $logOutput = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $ftpServer = "axiiom.org"; // Remplacez par l'adresse de votre serveur FTP
-    $ftpPort = 21; // Port FTP par défaut
-    $ftpUsername = "sfserver"; // Remplacez par votre nom d'utilisateur FTP
-    $ftpPassword = "!Zaya12131213"; // Remplacez par votre mot de passe FTP
-    $uploadDir = "/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory"; // Chemin sur le serveur FTP
-
+    $uploadDir = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory/"; // Remplacez par le chemin de votre répertoire de destination
     $fileName = basename($_FILES['file']['name']);
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     $allowedExtensions = ['sbp', 'sbpcfg'];
@@ -31,37 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         exit;
     }
 
-    // Connexion au serveur FTP
-    $ftpConn = ftp_connect($ftpServer, $ftpPort);
-    if (!$ftpConn) {
-        logMessage("Could not connect to $ftpServer on port $ftpPort", $logOutput);
-        echo "Could not connect to $ftpServer on port $ftpPort\n" . $logOutput;
-        exit;
-    }
-    $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
-
-    if (!$login) {
-        logMessage("Connexion FTP échouée.", $logOutput);
-        echo "Erreur de connexion FTP.\n" . $logOutput;
-        exit;
-    }
-
-    // Activer le mode passif
-    ftp_pasv($ftpConn, true);
-    logMessage("Connexion FTP réussie en mode passif.", $logOutput);
-
-    // Téléchargement du fichier
+    // Déplacer le fichier vers le répertoire de destination
     $destinationFile = $uploadDir . $fileName;
-    if (ftp_put($ftpConn, $destinationFile, $_FILES['file']['tmp_name'], FTP_BINARY)) {
-        logMessage("Fichier uploadé vers $destinationFile", $logOutput);
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $destinationFile)) {
+        logMessage("Fichier déplacé vers $destinationFile", $logOutput);
         echo "Fichier uploadé avec succès.\n" . $logOutput;
     } else {
-        logMessage("Erreur lors de l'upload FTP.", $logOutput);
-        echo "Erreur lors de l'upload FTP.\n" . $logOutput;
+        logMessage("Erreur lors du déplacement du fichier.", $logOutput);
+        echo "Erreur lors de l'upload du fichier.\n" . $logOutput;
     }
-
-    // Fermer la connexion FTP
-    ftp_close($ftpConn);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
