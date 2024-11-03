@@ -31,7 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 
     // Connexion au serveur FTP
-    $ftpConn = ftp_connect($ftpServer) or die("Could not connect to $ftpServer");
+    $ftpConn = ftp_connect($ftpServer);
+    if (!$ftpConn) {
+        logMessage("Could not connect to $ftpServer", $logOutput);
+        echo "Could not connect to $ftpServer\n" . $logOutput;
+        exit;
+    }
     $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
 
     if (!$login) {
@@ -39,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Erreur de connexion FTP.\n" . $logOutput;
         exit;
     }
+
+    logMessage("Connexion FTP réussie.", $logOutput);
 
     // Téléchargement du fichier
     $destinationFile = $uploadDir . $fileName;
