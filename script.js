@@ -34,7 +34,8 @@ function uploadBlueprint() {
     })
     .then(data => {
         console.log('Réponse du serveur traitée.');
-        alert(data);
+        console.log('Logs du serveur :\n' + data);
+        alert(data.split('\n')[0]); // Affiche uniquement le premier message à l'utilisateur
     })
     .catch(error => {
         console.error('Erreur:', error);

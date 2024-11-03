@@ -1,7 +1,10 @@
 <?php
-function logMessage($message) {
+function logMessage($message, &$logOutput) {
     error_log($message, 3, '/var/log/controlServer.log');
+    $logOutput .= $message . "\n";
 }
+
+$logOutput = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $uploadDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory/';
@@ -9,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     $allowedExtensions = ['sbp', 'sbpcfg'];
 
-    logMessage("Tentative d'upload de fichier: $fileName\n");
+    logMessage("Tentative d'upload de fichier: $fileName", $logOutput);
 
     // Vérification de l'extension du fichier
     if (!in_array($fileExtension, $allowedExtensions)) {
-        logMessage("Extension de fichier non autorisée: $fileExtension\n");
-        echo "Seuls les fichiers .sbp et .sbpcfg sont autorisés.";
+        logMessage("Extension de fichier non autorisée: $fileExtension", $logOutput);
+        echo "Seuls les fichiers .sbp et .sbpcfg sont autorisés.\n" . $logOutput;
         exit;
     }
 
@@ -22,35 +25,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     // Déplacer le fichier vers un emplacement temporaire
     if (move_uploaded_file($_FILES['file']['tmp_name'], $tempFile)) {
-        logMessage("Fichier déplacé vers $tempFile\n");
+        logMessage("Fichier déplacé vers $tempFile", $logOutput);
 
         // Utiliser sudo pour déplacer le fichier avec les droits de sfserver
-        $command = escapeshellcmd("sudo -u sfserver mv $tempFile '$uploadDir$fileName'");
-        logMessage("Exécution de la commande: $command\n");
+        $command = "sudo -u sfserver mv $tempFile '$uploadDir$fileName'";
+        logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
-        $returnVar = null;
-        exec($command, $output, $returnVar);
+        logMessage("Sortie de la commande: $output", $logOutput);
 
-        if ($returnVar !== 0) {
-            logMessage("Erreur lors du déplacement du fichier. Code de retour: $returnVar\n");
-            echo "Erreur lors du déplacement du fichier.";
+        if ($output === null) {
+            logMessage("Erreur lors du déplacement du fichier.", $logOutput);
+            echo "Erreur lors du déplacement du fichier.\n" . $logOutput;
         } else {
-            logMessage("Fichier uploadé avec succès.\n");
-            echo "Fichier uploadé avec succès.";
+            logMessage("Fichier uploadé avec succès.", $logOutput);
+            echo "Fichier uploadé avec succès.\n" . $logOutput;
         }
     } else {
-        logMessage("Erreur lors de l'upload du fichier temporaire.\n");
-        echo "Erreur lors de l'upload.";
+        logMessage("Erreur lors de l'upload du fichier temporaire.", $logOutput);
+        echo "Erreur lors de l'upload.\n" . $logOutput;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_GET['action'];
     if (in_array($action, ['start', 'stop', 'restart'])) {
-        logMessage("Exécution de l'action serveur: $action\n");
+        logMessage("Exécution de l'action serveur: $action", $logOutput);
         $output = shell_exec("cd /home/sfserver && ./sfserver $action");
-        logMessage("Résultat de l'action: $output\n");
-        echo "Serveur $action avec succès.";
+        logMessage("Résultat de l'action: $output", $logOutput);
+        echo "Serveur $action avec succès.\n" . $logOutput;
     }
 }
 ?>
