@@ -81,11 +81,18 @@ function controlServer(action) {
 }
 
 function checkServerStatus() {
+    console.log('Vérification de l\'état du serveur...');
     fetch('https://axiiom.org/controlServer.php?action=status')
-    .then(response => response.text())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau : ' + response.statusText);
+        }
+        return response.text();
+    })
     .then(status => {
         const statusElement = document.getElementById('serverStatus');
         statusElement.textContent = `État du serveur : ${status}`;
+        console.log(`État du serveur récupéré : ${status}`);
     })
     .catch(error => {
         console.error('Erreur lors de la vérification de l\'état du serveur:', error);
