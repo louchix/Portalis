@@ -1,4 +1,9 @@
 <?php
+// En-têtes CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
 function logMessage($message, &$logOutput) {
     error_log($message, 3, '/var/log/controlServer.log');
     $logOutput .= $message . "\n";
