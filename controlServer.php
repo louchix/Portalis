@@ -42,12 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
         // Exécuter le script pour vérifier l'état du serveur
-        $status = shell_exec("sudo -u sfserver /home/sfserver/script/startup.sh");
+        $status = shell_exec("sudo -u sfserver /home/sfserver/script/startup.sh 2>&1");
         logMessage("État du serveur récupéré: $status", $logOutput);
         echo trim($status); // Retourne "serveur ON" ou "serveur OFF"
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         logMessage("Exécution de l'action serveur: $action", $logOutput);
-        $output = shell_exec("sudo -u sfserver /home/sfserver/sfserver $action");
+        $output = shell_exec("sudo -u sfserver /home/sfserver/sfserver $action 2>&1");
         logMessage("Résultat de l'action: $output", $logOutput);
         echo "Serveur $action avec succès.\n" . $logOutput;
     }
