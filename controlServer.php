@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
         // Exécuter le script pour vérifier l'état du serveur
-        $output = shell_exec("sudo -u sfserver /home/sfserver/script/startup.sh 2>&1");
-        $lines = explode("\n", trim($output));
+        $status = shell_exec("sudo -u sfserver /home/sfserver/script/startup.sh 2>&1");
+        $lines = explode("\n", trim($status));
         $status = end($lines); // Récupère la dernière ligne
         logMessage("État du serveur récupéré: $status", $logOutput);
         echo $status; // Retourne uniquement la dernière ligne
