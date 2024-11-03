@@ -32,18 +32,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $tempFile)) {
         logMessage("Fichier déplacé vers $tempFile", $logOutput);
 
-        // Utiliser sudo pour déplacer le fichier avec les droits de sfserver
-        $command = "sudo -u sfserver mv $tempFile '$uploadDir$fileName'";
-        logMessage("Exécution de la commande: $command", $logOutput);
-        $output = shell_exec($command);
-        logMessage("Sortie de la commande: $output", $logOutput);
+        // Copier le fichier dans le répertoire de destination
+        $destinationFile = $uploadDir . $fileName;
+        if (copy($tempFile, $destinationFile)) {
+            logMessage("Fichier copié vers $destinationFile", $logOutput);
 
-        if ($output === null) {
-            logMessage("Erreur lors du déplacement du fichier.", $logOutput);
-            echo "Erreur lors du déplacement du fichier.\n" . $logOutput;
+            // Utiliser sudo pour changer le propriétaire du fichier
+            $command = "sudo chown sfserver:sfserver '$destinationFile'";
+            logMessage("Exécution de la commande: $command", $logOutput);
+            $output = shell_exec($command);
+            logMessage("Sortie de la commande: $output", $logOutput);
+
+            if ($output === null) {
+                logMessage("Erreur lors du changement de propriétaire du fichier.", $logOutput);
+                echo "Erreur lors du changement de propriétaire du fichier.\n" . $logOutput;
+            } else {
+                logMessage("Fichier uploadé et propriétaire changé avec succès.", $logOutput);
+                echo "Fichier uploadé et propriétaire changé avec succès.\n" . $logOutput;
+            }
         } else {
-            logMessage("Fichier uploadé avec succès.", $logOutput);
-            echo "Fichier uploadé avec succès.\n" . $logOutput;
+            logMessage("Erreur lors de la copie du fichier.", $logOutput);
+            echo "Erreur lors de la copie du fichier.\n" . $logOutput;
         }
     } else {
         logMessage("Erreur lors de l'upload du fichier temporaire.", $logOutput);
