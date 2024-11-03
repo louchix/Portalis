@@ -1,7 +1,17 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $uploadDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu\ Factory/';
-    $uploadFile = $uploadDir . basename($_FILES['file']['name']);
+    $fileName = basename($_FILES['file']['name']);
+    $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    $allowedExtensions = ['sbp', 'sbpcfg'];
+
+    // Vérification de l'extension du fichier
+    if (!in_array($fileExtension, $allowedExtensions)) {
+        echo "Seuls les fichiers .sbp et .sbpcfg sont autorisés.";
+        exit;
+    }
+
+    $uploadFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
         echo "Fichier uploadé avec succès.";
