@@ -13,6 +13,7 @@ $logOutput = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $ftpServer = "axiiom.org"; // Remplacez par l'adresse de votre serveur FTP
+    $ftpPort = 21; // Port FTP par défaut
     $ftpUsername = "sfserver"; // Remplacez par votre nom d'utilisateur FTP
     $ftpPassword = "!Zaya12131213"; // Remplacez par votre mot de passe FTP
     $uploadDir = ".config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory"; // Chemin sur le serveur FTP
@@ -31,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 
     // Connexion au serveur FTP
-    $ftpConn = ftp_connect($ftpServer);
+    $ftpConn = ftp_connect($ftpServer, $ftpPort);
     if (!$ftpConn) {
-        logMessage("Could not connect to $ftpServer", $logOutput);
-        echo "Could not connect to $ftpServer\n" . $logOutput;
+        logMessage("Could not connect to $ftpServer on port $ftpPort", $logOutput);
+        echo "Could not connect to $ftpServer on port $ftpPort\n" . $logOutput;
         exit;
     }
     $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
