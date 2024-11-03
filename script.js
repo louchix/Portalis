@@ -24,7 +24,7 @@ function uploadBlueprint() {
     formData.append('file', file);
     console.log('FormData créé avec le fichier.');
 
-    fetch('/upload', {
+    fetch('/controlServer.php', {
         method: 'POST',
         body: formData
     })
