@@ -13,7 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     $uploadFile = $uploadDir . $fileName;
 
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+    // Utiliser sudo pour déplacer le fichier avec les droits de sfserver
+    if (move_uploaded_file($_FILES['file']['tmp_name'], "/tmp/$fileName")) {
+        $command = escapeshellcmd("sudo -u sfserver mv /tmp/$fileName $uploadFile");
+        shell_exec($command);
         echo "Fichier uploadé avec succès.";
     } else {
         echo "Erreur lors de l'upload.";
