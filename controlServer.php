@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $ftpPort = 21; // Port FTP par défaut
     $ftpUsername = "sfserver"; // Remplacez par votre nom d'utilisateur FTP
     $ftpPassword = "!Zaya12131213"; // Remplacez par votre mot de passe FTP
-    $uploadDir = ".config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory"; // Chemin sur le serveur FTP
+    $uploadDir = "/.config/Epic/FactoryGame/Saved/SaveGames/blueprints/uWu Factory"; // Chemin sur le serveur FTP
 
     $fileName = basename($_FILES['file']['name']);
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
