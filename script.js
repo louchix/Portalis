@@ -167,17 +167,21 @@ function loadSaves() {
             return response.json();
         })
         .then(data => {
+            console.log(data); // Vérifiez la structure ici
             const saveList = document.getElementById('saveList');
             saveList.innerHTML = ''; // Réinitialiser la liste
 
-            if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
-                data.files.forEach(file => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
-                    saveList.appendChild(listItem);
+            // Vérifiez si data.files est un objet et convertissez-le en tableau
+            const filesArray = data.files && typeof data.files === 'object' ? Object.keys(data.files) : [];
+
+            if (filesArray.length > 0) { // Vérifiez si le tableau n'est pas vide
+                filesArray.forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file; // Ajouter chaque fichier à la liste
+                    saveList.appendChild(li);
                 });
             } else {
-                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                 console.error('Erreur : data.files n\'est pas un tableau.', data);
             }
         })
