@@ -64,6 +64,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
         echo 'Serveur redémarré avec succès.';
+    } elseif ($action === 'list_saves') {
+        $saveDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server';
+        if (is_dir($saveDir)) {
+            $files = array_diff(scandir($saveDir), array('..', '.')); // Liste des fichiers
+            echo json_encode(['files' => $files]);
+        } else {
+            echo json_encode(['error' => 'Le répertoire de sauvegarde n\'existe pas.']);
+        }
+    } elseif ($action === 'download' && isset($_GET['file'])) {
+        $file = basename($_GET['file']); // Sécuriser le nom du fichier
+        $filePath = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/$file";
+
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            exit;
+        } else {
+            echo json_encode(['error' => 'Le fichier n\'existe pas.']);
+        }
     }
 }
 ?>

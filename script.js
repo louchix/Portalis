@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Vérifier l'état du serveur dès que la page est chargée
     checkServerStatus();
+
+    // Appeler la fonction pour charger les sauvegardes
+    loadSaves();
 });
 
 function uploadBlueprint() {
@@ -126,3 +129,33 @@ function checkServerStatus() {
 
 // Vérifier l'état du serveur toutes les 10 secondes
 setInterval(checkServerStatus, 10000);
+
+function loadSaves() {
+    fetch('controlServer.php?action=list_saves')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const saveList = document.getElementById('saveList');
+            saveList.innerHTML = ''; // Réinitialiser la liste
+
+            if (data.files) {
+                data.files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                    saveList.appendChild(listItem);
+                });
+            } else {
+                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des sauvegardes:', error);
+        });
+}
+
+// Appeler la fonction pour charger les sauvegardes
+loadSaves();
