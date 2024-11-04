@@ -60,8 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             echo "Erreur: le fichier status.txt n'existe pas.\n" . $logOutput;
         }
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
-        // Commande pour contrôler le serveur
-        $command = "sudo -u sfserver /home/sfserver/sfserver $action 2>&1";
+        // Commande pour contrôler le serveur avec les scripts start.sh, stop.sh et restart.sh
+        $scriptPath = "/home/sfserver/script/{$action}.sh"; // Chemin vers le script
+        $command = "sudo -u sfserver $scriptPath 2>&1"; // Exécuter le script
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
