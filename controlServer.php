@@ -55,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             logMessage("État du serveur récupéré: $status", $logOutput);
             // Vérification de l'état du serveur
             if (strpos($status, 'ON') !== false) {
-                echo "Serveur est en marche.\n";
+                echo "Serveur ON.\n";
             } elseif (strpos($status, 'OFF') !== false) {
-                echo "Serveur est arrêté.\n";
+                echo "Serveur OFF.\n";
             } else {
-                echo "État du serveur inconnu: $status\n" . $logOutput;
+                echo "Inconnu: $status\n" . $logOutput;
             }
         }
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
