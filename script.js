@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Vérifier l'état du serveur dès que la page est chargée
     checkServerStatus();
+
+    listSaves();
 });
 
 function uploadBlueprint() {
@@ -121,6 +123,35 @@ function checkServerStatus() {
         })
         .catch(error => {
             console.error('Erreur lors de la vérification de l\'état du serveur:', error);
+        });
+}
+
+function listSaves() {
+    console.log('Récupération de la liste des sauvegardes...');
+    fetch('controlServer.php?action=list_saves')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.statusText);
+            }
+            return response.json(); // Traiter la réponse comme JSON
+        })
+        .then(data => {
+            const saveListElement = document.getElementById('saveList');
+            saveListElement.innerHTML = ''; // Réinitialiser la liste
+
+            if (data.error) {
+                saveListElement.innerHTML = `<li>${data.error}</li>`;
+            } else {
+                data.files.forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file; // Ajouter chaque fichier à la liste
+                    saveListElement.appendChild(li);
+                });
+            }
+            console.log('Liste des sauvegardes récupérée.');
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des sauvegardes:', error);
         });
 }
 
