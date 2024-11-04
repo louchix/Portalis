@@ -53,3 +53,12 @@ body {
 .loading {
     animation: spin 1s linear infinite; /* Animation de rotation */
 }
+
+.loading-text {
+    display: inline-block; /* Permet à l'animation de fonctionner correctement */
+    transition: transform 1s linear; /* Transition pour l'animation */
+}
+
+.loading-text.loading {
+    animation: spin 1s linear infinite; /* Animation de rotation */
+}

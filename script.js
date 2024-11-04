@@ -66,10 +66,10 @@ function uploadBlueprint() {
 
 function controlServer(action) {
     console.log(`Action du serveur: ${action}`);
-    const button = document.querySelector('.button.is-warning'); // Sélectionnez le bouton
+    const loadingText = document.querySelector('.loading-text'); // Sélectionnez le texte
 
     // Ajoutez la classe de chargement pour l'animation
-    button.classList.add('loading');
+    loadingText.classList.add('loading');
 
     fetch(`controlServer.php?action=${action}`)
     .then(response => {
@@ -89,7 +89,7 @@ function controlServer(action) {
     })
     .finally(() => {
         // Retirez la classe de chargement après la réponse
-        button.classList.remove('loading');
+        loadingText.classList.remove('loading');
     });
 }
 
