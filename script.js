@@ -145,23 +145,34 @@ function loadSaves() {
             if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
                 const fileStatsPromises = data.files.map(file => {
                     const filePath = `/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/${file}`;
-                    return getFileStats(filePath).then(stats => {
+                    return getFileStats(filePath).then(stats => ({
+                        file,
+                        date: stats.date,
+                        size: stats.size,
+                        creationTime: stats.creationTime // Ajoutez la date de création pour le tri
+                    }));
+                });
+
+                // Attendre que toutes les promesses soient résolues
+                return Promise.all(fileStatsPromises).then(fileStats => {
+                    // Trier les fichiers par date de création (du plus récent au plus ancien)
+                    fileStats.sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime));
+
+                    // Afficher les fichiers triés
+                    fileStats.forEach(({ file, date, size }) => {
                         const card = document.createElement('div');
                         card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
                         card.innerHTML = `
                             <div class="card-content">
                                 <h3 class="title is-4">${file}</h3>
-                                <p>Date : ${stats.date}</p>
-                                <p>Poids : ${stats.size.toFixed(2)} Mo</p>
+                                <p>Date : ${date}</p>
+                                <p>Poids : ${size.toFixed(2)} Mo</p> <!-- Afficher la taille en Mo avec 2 décimales -->
                                 <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
                             </div>
                         `;
                         saveList.appendChild(card);
                     });
                 });
-
-                // Attendre que toutes les promesses soient résolues
-                return Promise.all(fileStatsPromises);
             } else {
                 saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                 console.error('Erreur : data.files n\'est pas un tableau.', data);
@@ -180,13 +191,15 @@ function getFileStats(filePath) {
             if (data.success) {
                 return {
                     date: new Date(data.creation_time * 1000).toLocaleDateString(), // Convertir le timestamp en date
-                    size: data.size // Utiliser la taille réelle
+                    size: data.size, // Utiliser la taille réelle
+                    creationTime: data.creation_time // Renvoie le timestamp pour le tri
                 };
             } else {
                 console.error('Erreur lors de la récupération des statistiques du fichier:', data.error);
                 return {
                     date: 'Inconnu',
-                    size: 'Inconnu'
+                    size: 'Inconnu',
+                    creationTime: 0 // Valeur par défaut pour le tri
                 };
             }
         })
@@ -194,7 +207,8 @@ function getFileStats(filePath) {
             console.error('Erreur lors de la récupération des statistiques du fichier:', error);
             return {
                 date: 'Inconnu',
-                size: 'Inconnu'
+                size: 'Inconnu',
+                creationTime: 0 // Valeur par défaut pour le tri
             };
         });
 }
