@@ -50,11 +50,11 @@
                 }
             });
 
-            // Vérification de l'état du serveur
-            checkServerStatus(); // Appel initial pour vérifier l'état du serveur
-
             // Vérifier l'état du serveur toutes les 10 secondes
             setInterval(checkServerStatus, 10000);
+            
+            // Appel initial pour vérifier l'état du serveur
+            checkServerStatus(); // Vous pouvez garder cet appel si vous voulez vérifier immédiatement
         });
 
         function checkServerStatus() {
