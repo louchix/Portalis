@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             if (strpos($status, 'ON') !== false) {
                 echo "Serveur ON.\n";
             } elseif (strpos($status, 'OFF') !== false) {
-                echo "Serveur OFF.\n";
+                echo "Serveur OFF.\n" . $logOutput;
             } else {
                 echo "Inconnu: $status\n" . $logOutput;
             }
