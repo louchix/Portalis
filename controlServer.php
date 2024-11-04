@@ -5,9 +5,7 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 function logMessage($message, &$logOutput) {
-    error_log($message, 3, '/var/log/controlServer.log');
-    $logOutput .= $message . "\n";
-    error_log($message, 3, '/home/sfserver/script/execution.log');
+
 }
 
 $logOutput = "";
@@ -60,9 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             echo "Erreur: le fichier status.txt n'existe pas.\n" . $logOutput;
         }
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
-        // Commande pour contrôler le serveur avec les scripts start.sh, stop.sh et restart.sh
-        $scriptPath = "/home/sfserver/script/{$action}.sh"; // Chemin vers le script
-        $command = "sudo -u sfserver sh $scriptPath "; // Exécuter le script
+        // Commande pour contrôler le serveur avec sudo service
+        $command = "sudo service sfserver $action"; // Exécuter la commande service
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
