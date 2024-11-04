@@ -42,20 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_GET['action'];
     logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
-        // Commande pour vérifier l'état du serveur
-        $command = "sudo -u sfserver /home/sfserver/sfserver details 2>&1";
-        logMessage("Exécution de la commande: $command", $logOutput);
-        $status = shell_exec($command);
-        if ($status === null) {
-            logMessage("Erreur lors de l'exécution de la commande.", $logOutput);
-        } else {
-            logMessage("Sortie brute de la commande: $status", $logOutput);
+        // Lire le fichier status.txt pour vérifier l'état du serveur
+        $statusFile = '/home/sfserver/status.txt';
+        if (file_exists($statusFile)) {
+            $status = file_get_contents($statusFile);
+            logMessage("Contenu du fichier status.txt: $status", $logOutput);
             // Vérification de l'état du serveur
             if (strpos($status, 'STARTED') !== false) {
                 echo "Serveur est en marche.\n" . $logOutput;
             } else {
                 echo "Serveur est arrêté.\n" . $logOutput;
             }
+        } else {
+            logMessage("Le fichier status.txt n'existe pas.", $logOutput);
+            echo "Erreur: le fichier status.txt n'existe pas.\n" . $logOutput;
         }
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         // Commande pour contrôler le serveur
