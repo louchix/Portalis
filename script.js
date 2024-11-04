@@ -142,7 +142,7 @@ function loadSaves() {
             const saveList = document.getElementById('saveList');
             saveList.innerHTML = ''; // Réinitialiser la liste
 
-            if (data.files) {
+            if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
                 data.files.forEach(file => {
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
@@ -150,6 +150,7 @@ function loadSaves() {
                 });
             } else {
                 saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                console.error('Erreur : data.files n\'est pas un tableau.', data);
             }
         })
         .catch(error => {
