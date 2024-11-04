@@ -13,28 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Fonction pour mettre à jour l'état du serveur
-    function updateServerStatus() {
-        fetch('controlServer.php?action=status')
-            .then(response => response.text())
-            .then(status => {
-                const serverStatusDiv = document.getElementById('serverStatus');
-                serverStatusDiv.textContent = status;
-
-                // Changer la couleur en fonction de l'état
-                if (status.includes('ON')) {
-                    serverStatusDiv.className = 'notification is-success'; // Vert
-                } else if (status.includes('OFF')) {
-                    serverStatusDiv.className = 'notification is-danger'; // Rouge
-                } else {
-                    serverStatusDiv.className = 'notification is-warning'; // Jaune pour état inconnu
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
-    }
-
-    // Appel initial pour mettre à jour l'état du serveur
-    updateServerStatus();
+    // Vérifier l'état du serveur dès que la page est chargée
+    checkServerStatus();
 });
 
 function uploadBlueprint() {
@@ -104,5 +84,26 @@ function controlServer(action) {
     });
 }
 
+function checkServerStatus() {
+    console.log('Vérification de l\'état du serveur...');
+    fetch('https://axiiom.org/controlServer.php?action=status')
+    .then(response => {
+        console.log('Réponse reçue du serveur pour le statut.');
+        if (!response.ok) {
+            throw new Error('Erreur réseau : ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(status => {
+        const statusElement = document.getElementById('serverStatus');
+        statusElement.textContent = `État du serveur : ${status}`;
+        console.log(`État du serveur récupéré : ${status}`);
+        console.log('Logs du serveur :\n' + status); // Affiche les logs du serveur
+    })
+    .catch(error => {
+        console.error('Erreur lors de la vérification de l\'état du serveur:', error);
+    });
+}
+
 // Vérifier l'état du serveur toutes les 10 secondes
-setInterval(updateServerStatus, 10000);
+setInterval(checkServerStatus, 10000);
