@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
-        echo "Serveur $action avec succès.\n" . $logOutput;
+        echo "Serveur restart avec succès.\n" . $logOutput;
     }
 }
 ?>
