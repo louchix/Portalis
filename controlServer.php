@@ -5,10 +5,6 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 function logMessage($message, &$logOutput) {
-    // Convertir le message en UTF-8
-    $message = mb_convert_encoding($message, 'UTF-8');
-    
-    // Enregistrer le message dans les fichiers de log
     error_log($message, 3, '/var/log/controlServer.log');
     $logOutput .= $message . "\n";
     error_log($message, 3, '/home/sfserver/script/execution.log');
