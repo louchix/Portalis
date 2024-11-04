@@ -66,7 +66,12 @@ function uploadBlueprint() {
 
 function controlServer(action) {
     console.log(`Action du serveur: ${action}`);
-    fetch(`https://axiiom.org/controlServer.php?action=${action}`)
+    const button = document.querySelector('.button.is-warning'); // Sélectionnez le bouton
+
+    // Ajoutez la classe de chargement pour l'animation
+    button.classList.add('loading');
+
+    fetch(`controlServer.php?action=${action}`)
     .then(response => {
         console.log(`Réponse reçue du serveur pour l'action ${action}.`);
         if (!response.ok) {
@@ -81,6 +86,10 @@ function controlServer(action) {
     })
     .catch(error => {
         console.error('Erreur:', error);
+    })
+    .finally(() => {
+        // Retirez la classe de chargement après la réponse
+        button.classList.remove('loading');
     });
 }
 
