@@ -136,17 +136,20 @@ function listSaves() {
             return response.json(); // Traiter la réponse comme JSON
         })
         .then(data => {
+            console.log(data); // Ajoutez cette ligne pour voir la réponse du serveur
             const saveListElement = document.getElementById('saveList');
             saveListElement.innerHTML = ''; // Réinitialiser la liste
 
             if (data.error) {
                 saveListElement.innerHTML = `<li>${data.error}</li>`;
-            } else {
+            } else if (Array.isArray(data.files)) { // Vérifiez si data.files est un tableau
                 data.files.forEach(file => {
                     const li = document.createElement('li');
                     li.textContent = file; // Ajouter chaque fichier à la liste
                     saveListElement.appendChild(li);
                 });
+            } else {
+                saveListElement.innerHTML = '<li>Aucune sauvegarde trouvée.</li>'; // Message par défaut
             }
             console.log('Liste des sauvegardes récupérée.');
         })
