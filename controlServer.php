@@ -49,9 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             logMessage("Contenu du fichier status.txt: $status", $logOutput);
             // Vérification de l'état du serveur
             if (strpos($status, 'Serveur ON') !== false) {
-                echo "Serveur ON.\n";
+                echo "Serveur ON";
             } elseif (strpos($status, 'Serveur OFF') !== false) {
-                echo "Serveur OFF.\n";
+                echo "Serveur OFF";
             } else {
                 echo "État du serveur inconnu: $status\n" . $logOutput;
             }
