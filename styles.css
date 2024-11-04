@@ -78,3 +78,21 @@ body {
         opacity: 1;
     }
 }
+
+.card {
+    margin: 10px 0; /* Espace entre les cartes */
+    border: 1px solid #ddd; /* Bordure légère */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 15px; /* Rembourrage interne */
+    background-color: #fff; /* Couleur de fond blanche */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column; /* Aligner le contenu verticalement */
+}
+
+.card .title {
+    margin-bottom: 10px; /* Espace sous le titre */
+}

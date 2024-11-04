@@ -144,8 +144,19 @@ function loadSaves() {
 
             if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
                 data.files.forEach(file => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                    const filePath = `/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/${file}`;
+                    const fileStats = getFileStats(filePath); // Fonction pour obtenir les stats du fichier
+
+                    const listItem = document.createElement('div');
+                    listItem.className = 'card'; // Ajouter la classe de carte
+                    listItem.innerHTML = `
+                        <div class="card-content">
+                            <h3 class="title is-4">${file}</h3>
+                            <p>Date : ${fileStats.date}</p>
+                            <p>Poids : ${fileStats.size} Ko</p>
+                            <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
+                        </div>
+                    `;
                     saveList.appendChild(listItem);
                 });
             } else {
@@ -156,6 +167,16 @@ function loadSaves() {
         .catch(error => {
             console.error('Erreur lors du chargement des sauvegardes:', error);
         });
+}
+
+// Fonction pour obtenir les statistiques du fichier
+function getFileStats(filePath) {
+    // Remplacez ceci par une méthode pour obtenir la date et la taille du fichier
+    const stats = {
+        date: new Date().toLocaleDateString(), // Remplacez par la date réelle
+        size: Math.floor(Math.random() * 100) // Remplacez par la taille réelle en Ko
+    };
+    return stats;
 }
 
 // Appeler la fonction pour charger les sauvegardes
