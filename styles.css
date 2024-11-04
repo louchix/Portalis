@@ -6,6 +6,8 @@ body {
 .title {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
 }
 
 .file.has-name {
@@ -20,4 +22,25 @@ body {
 
 .button {
     margin: 0 10px;
+}
+
+.notification {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.is-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.is-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.is-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
 }
