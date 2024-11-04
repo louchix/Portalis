@@ -136,13 +136,13 @@ function listSaves() {
             return response.json(); // Traiter la réponse comme JSON
         })
         .then(data => {
-            console.log(data); // Ajoutez cette ligne pour voir la réponse du serveur
+            console.log(data); // Vérifiez ce que le serveur renvoie
             const saveListElement = document.getElementById('saveList');
             saveListElement.innerHTML = ''; // Réinitialiser la liste
 
             if (data.error) {
                 saveListElement.innerHTML = `<li>${data.error}</li>`;
-            } else if (Array.isArray(data.files)) { // Vérifiez si data.files est un tableau
+            } else if (data.files && Array.isArray(data.files) && data.files.length > 0) { // Vérifiez si data.files est un tableau non vide
                 data.files.forEach(file => {
                     const li = document.createElement('li');
                     li.textContent = file; // Ajouter chaque fichier à la liste
