@@ -158,5 +158,36 @@ function listSaves() {
         });
 }
 
+function loadSaves() {
+    fetch('controlServer.php?action=list_saves')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const saveList = document.getElementById('saveList');
+            saveList.innerHTML = ''; // Réinitialiser la liste
+
+            if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
+                data.files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                    saveList.appendChild(listItem);
+                });
+            } else {
+                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                console.error('Erreur : data.files n\'est pas un tableau.', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des sauvegardes:', error);
+        });
+}
+
+// Appeler la fonction pour charger les sauvegardes
+loadSaves();
+
 // Vérifier l'état du serveur toutes les 10 secondes
 setInterval(checkServerStatus, 10000);
