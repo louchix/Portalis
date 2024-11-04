@@ -179,7 +179,16 @@ function loadSaves() {
                     console.log('Fichiers trouvés:', filesArray); // Log des fichiers trouvés
                     filesArray.forEach(file => {
                         const li = document.createElement('li');
-                        li.textContent = file; // Ajouter chaque fichier à la liste
+                        
+                        // Créer un lien pour le téléchargement
+                        const downloadLink = document.createElement('a');
+                        downloadLink.textContent = file; // Nom du fichier
+                        downloadLink.href = `controlServer.php?action=download&file=${encodeURIComponent(file)}`; // URL de téléchargement
+                        downloadLink.target = '_blank'; // Ouvrir dans un nouvel onglet
+                        downloadLink.className = 'download-link'; // Ajouter une classe pour le style si nécessaire
+
+                        // Ajouter le lien au li
+                        li.appendChild(downloadLink);
                         saveList.appendChild(li);
                     });
                 } else {
