@@ -38,50 +38,6 @@
             </div>
         </div>
     </section>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('fileInput').addEventListener('change', function() {
-                const fileNameSpan = document.querySelector('.file-name');
-                const file = this.files[0];
-                if (file) {
-                    fileNameSpan.textContent = file.name;
-                } else {
-                    fileNameSpan.textContent = 'Aucun fichier sélectionné';
-                }
-            });
-
-            // Vérifier l'état du serveur toutes les 10 secondes
-            setInterval(checkServerStatus, 10000);
-            
-            // Appel initial pour vérifier l'état du serveur
-            checkServerStatus(); // Vous pouvez garder cet appel si vous voulez vérifier immédiatement
-        });
-
-        function checkServerStatus() {
-            console.log('Vérification de l\'état du serveur...');
-            fetch('controlServer.php?action=status')
-                .then(response => response.text())
-                .then(status => {
-                    const serverStatusDiv = document.getElementById('serverStatus');
-                    
-                    // Réinitialiser les classes avant d'ajouter la nouvelle classe
-                    serverStatusDiv.classList.remove('is-info', 'is-success', 'is-danger');
-
-                    if (status.includes('Serveur ON')) {
-                        serverStatusDiv.classList.add('is-success'); // Changer en vert
-                    } else if (status.includes('Serveur OFF')) {
-                        serverStatusDiv.classList.add('is-danger'); // Changer en rouge
-                    } else {
-                        serverStatusDiv.classList.add('is-info'); // État inconnu
-                    }
-                    
-                    serverStatusDiv.textContent = `État du serveur : ${status}`;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la vérification de l\'état du serveur:', error);
-                });
-        }
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
