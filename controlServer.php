@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         // Commande pour contrôler le serveur avec les scripts start.sh, stop.sh et restart.sh
         $scriptPath = "/home/sfserver/script/{$action}.sh"; // Chemin vers le script
-        $command = "sh $scriptPath "; // Exécuter le script
+        $command = "sudo -u sfserver sh $scriptPath "; // Exécuter le script
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
