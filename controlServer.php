@@ -57,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             logMessage("Le fichier status.txt n'existe pas.", $logOutput);
             echo "Erreur: le fichier status.txt n'existe pas.\n" . $logOutput;
         }
-    } elseif (in_array($action, ['start', 'stop', 'restart'])) {
+    } elseif (in_array($action, ['stop'])) {
         // Commande pour contrôler le serveur avec sudo service
-        $command = "sudo service sfserver $action"; // Exécuter la commande service
+        $command = "sudo service sfserver $action && sleep 5 &&sudo service sfserver start"; // Exécuter la commande service
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
