@@ -158,19 +158,25 @@ function loadSaves() {
                     // Trier les fichiers par date de création (du plus récent au plus ancien)
                     fileStats.sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime));
 
+                    // Utiliser un Set pour filtrer les doublons
+                    const displayedFiles = new Set();
+
                     // Afficher les fichiers triés
                     fileStats.forEach(({ file, date, size }) => {
-                        const card = document.createElement('div');
-                        card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
-                        card.innerHTML = `
-                            <div class="card-content">
-                                <h3 class="title is-4">${file}</h3>
-                                <p>Date : ${date}</p>
-                                <p>Poids : ${size.toFixed(2)} Mo</p> <!-- Afficher la taille en Mo avec 2 décimales -->
-                                <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
-                            </div>
-                        `;
-                        saveList.appendChild(card);
+                        if (!displayedFiles.has(file)) { // Vérifiez si le fichier a déjà été affiché
+                            displayedFiles.add(file); // Ajouter le fichier à l'ensemble
+                            const card = document.createElement('div');
+                            card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
+                            card.innerHTML = `
+                                <div class="card-content">
+                                    <h3 class="title is-4">${file}</h3>
+                                    <p>Date : ${date}</p>
+                                    <p>Poids : ${size.toFixed(2)} Mo</p> <!-- Afficher la taille en Mo avec 2 décimales -->
+                                    <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
+                                </div>
+                            `;
+                            saveList.appendChild(card);
+                        }
                     });
                 });
             } else {
