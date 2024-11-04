@@ -51,6 +51,21 @@
                     fileNameSpan.textContent = 'Aucun fichier sélectionné';
                 }
             });
+
+            // Vérification de l'état du serveur
+            fetch('controlServer.php?action=status')
+                .then(response => response.text())
+                .then(status => {
+                    const serverStatusDiv = document.getElementById('serverStatus');
+                    if (status.includes('Serveur ON')) {
+                        serverStatusDiv.classList.remove('is-info');
+                        serverStatusDiv.classList.add('is-success'); // Changer en vert
+                    } else if (status.includes('Serveur OFF')) {
+                        serverStatusDiv.classList.remove('is-info');
+                        serverStatusDiv.classList.add('is-danger'); // Changer en rouge
+                    }
+                    serverStatusDiv.textContent = `État du serveur : ${status}`;
+                });
         });
     </script>
     <script src="script.js"></script>
