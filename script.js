@@ -143,22 +143,25 @@ function loadSaves() {
             saveList.innerHTML = ''; // Réinitialiser la liste
 
             if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
-                data.files.forEach(file => {
+                const fileStatsPromises = data.files.map(file => {
                     const filePath = `/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/${file}`;
-                    const fileStats = getFileStats(filePath); // Fonction pour obtenir les stats du fichier
-
-                    const card = document.createElement('div');
-                    card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
-                    card.innerHTML = `
-                        <div class="card-content">
-                            <h3 class="title is-4">${file}</h3>
-                            <p>Date : ${fileStats.date}</p>
-                            <p>Poids : ${fileStats.size} Ko</p>
-                            <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
-                        </div>
-                    `;
-                    saveList.appendChild(card);
+                    return getFileStats(filePath).then(stats => {
+                        const card = document.createElement('div');
+                        card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
+                        card.innerHTML = `
+                            <div class="card-content">
+                                <h3 class="title is-4">${file}</h3>
+                                <p>Date : ${stats.date}</p>
+                                <p>Poids : ${stats.size.toFixed(2)} Mo</p>
+                                <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
+                            </div>
+                        `;
+                        saveList.appendChild(card);
+                    });
                 });
+
+                // Attendre que toutes les promesses soient résolues
+                return Promise.all(fileStatsPromises);
             } else {
                 saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                 console.error('Erreur : data.files n\'est pas un tableau.', data);
@@ -171,12 +174,29 @@ function loadSaves() {
 
 // Fonction pour obtenir les statistiques du fichier
 function getFileStats(filePath) {
-    // Remplacez ceci par une méthode pour obtenir la date et la taille du fichier
-    const stats = {
-        date: new Date().toLocaleDateString(), // Remplacez par la date réelle
-        size: Math.floor(Math.random() * 100) // Remplacez par la taille réelle en Ko
-    };
-    return stats;
+    return fetch(`controlServer.php?action=get_file_stats&file=${encodeURIComponent(filePath)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                return {
+                    date: new Date(data.creation_time * 1000).toLocaleDateString(), // Convertir le timestamp en date
+                    size: data.size // Utiliser la taille réelle
+                };
+            } else {
+                console.error('Erreur lors de la récupération des statistiques du fichier:', data.error);
+                return {
+                    date: 'Inconnu',
+                    size: 'Inconnu'
+                };
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des statistiques du fichier:', error);
+            return {
+                date: 'Inconnu',
+                size: 'Inconnu'
+            };
+        });
 }
 
 // Appeler la fonction pour charger les sauvegardes
