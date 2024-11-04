@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         if ($status === null) {
             logMessage("Erreur lors de l'exécution de la commande.", $logOutput);
         } else {
+            logMessage("Sortie brute du script: $status", $logOutput);
             $lines = explode("\n", trim($status));
             $status = end($lines); // Récupère la dernière ligne
             logMessage("État du serveur récupéré: $status", $logOutput);
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             } elseif (strpos($status, 'OFF') !== false) {
                 echo "Serveur est arrêté.\n" . $logOutput;
             } else {
-                echo "État du serveur inconnu.\n" . $logOutput;
+                echo "État du serveur inconnu: $status\n" . $logOutput;
             }
         }
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
