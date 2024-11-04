@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     logMessage("Requête GET reçue pour l'action: $action", $logOutput);
     if ($action === 'status') {
         // Commande pour vérifier l'état du serveur
-        $command = "whoami && cd /home/sfserver/script/ && ./startup.sh";
+        $command = "sh /home/sfserver/script/startup.sh";
         logMessage("Exécution de la commande: $command", $logOutput);
         $status = shell_exec($command);
         if ($status === null) {
