@@ -147,9 +147,9 @@ function loadSaves() {
                     const filePath = `/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/${file}`;
                     const fileStats = getFileStats(filePath); // Fonction pour obtenir les stats du fichier
 
-                    const listItem = document.createElement('div');
-                    listItem.className = 'card'; // Ajouter la classe de carte
-                    listItem.innerHTML = `
+                    const card = document.createElement('div');
+                    card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
+                    card.innerHTML = `
                         <div class="card-content">
                             <h3 class="title is-4">${file}</h3>
                             <p>Date : ${fileStats.date}</p>
@@ -157,10 +157,10 @@ function loadSaves() {
                             <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
                         </div>
                     `;
-                    saveList.appendChild(listItem);
+                    saveList.appendChild(card);
                 });
             } else {
-                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                 console.error('Erreur : data.files n\'est pas un tableau.', data);
             }
         })
