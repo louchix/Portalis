@@ -47,15 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             logMessage("Contenu du fichier status.txt: $status", $logOutput);
             // Vérification de l'état du serveur
             if (strpos($status, 'Serveur ON') !== false) {
-                echo "Serveur ON";
+                echo json_encode(['status' => 'ON']);
             } elseif (strpos($status, 'Serveur OFF') !== false) {
-                echo "Serveur OFF";
+                echo json_encode(['status' => 'OFF']);
             } else {
-                echo "État du serveur inconnu: $status\n" . $logOutput;
+                echo json_encode(['status' => 'UNKNOWN', 'message' => $status]);
             }
         } else {
             logMessage("Le fichier status.txt n'existe pas.", $logOutput);
-            echo "Erreur: le fichier status.txt n'existe pas.\n" . $logOutput;
+            echo json_encode(['error' => 'Le fichier status.txt n\'existe pas.']);
         }
     } elseif (in_array($action, ['stop'])) {
         // Commande pour contrôler le serveur avec sudo service
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
-        echo "Serveur restart avec succès.\n" . $logOutput;
+        echo json_encode(['message' => 'Serveur redémarré avec succès.']);
     }
 }
 ?>
