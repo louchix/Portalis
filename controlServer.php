@@ -5,6 +5,10 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 function logMessage($message, &$logOutput) {
+    // Convertir le message en UTF-8
+    $message = mb_convert_encoding($message, 'UTF-8');
+    
+    // Enregistrer le message dans les fichiers de log
     error_log($message, 3, '/var/log/controlServer.log');
     $logOutput .= $message . "\n";
     error_log($message, 3, '/home/sfserver/script/execution.log');
@@ -62,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     } elseif (in_array($action, ['start', 'stop', 'restart'])) {
         // Commande pour contrôler le serveur avec les scripts start.sh, stop.sh et restart.sh
         $scriptPath = "/home/sfserver/script/{$action}.sh"; // Chemin vers le script
-        $command = "sh $scriptPath"; // Exécuter le script
+        $command = "sh $scriptPath "; // Exécuter le script
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
