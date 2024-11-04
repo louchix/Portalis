@@ -48,10 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $status = file_get_contents($statusFile);
             logMessage("Contenu du fichier status.txt: $status", $logOutput);
             // Vérification de l'état du serveur
-            if (strpos($status, 'STARTED') !== false) {
-                echo "Serveur est en marche.\n" . $logOutput;
+            if (strpos($status, 'Serveur ON') !== false) {
+                echo "Serveur ON.\n";
+            } elseif (strpos($status, 'Serveur OFF') !== false) {
+                echo "Serveur OFF.\n";
             } else {
-                echo "Serveur est arrêté.\n" . $logOutput;
+                echo "État du serveur inconnu: $status\n" . $logOutput;
             }
         } else {
             logMessage("Le fichier status.txt n'existe pas.", $logOutput);
