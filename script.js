@@ -167,21 +167,19 @@ function loadSaves() {
             return response.json();
         })
         .then(data => {
-            console.log(data); // Vérifiez la structure ici
+            console.log('Données récupérées:', data); // Log des données récupérées
             const saveList = document.getElementById('saveList');
             saveList.innerHTML = ''; // Réinitialiser la liste
 
-            // Vérifiez si data.files est un objet et convertissez-le en tableau
-            const filesArray = data.files && typeof data.files === 'object' ? Object.keys(data.files) : [];
-
-            if (filesArray.length > 0) { // Vérifiez si le tableau n'est pas vide
-                filesArray.forEach(file => {
+            if (data.files && Array.isArray(data.files)) {
+                console.log('Fichiers trouvés:', data.files); // Log des fichiers trouvés
+                data.files.forEach(file => {
                     const li = document.createElement('li');
                     li.textContent = file; // Ajouter chaque fichier à la liste
                     saveList.appendChild(li);
                 });
             } else {
-                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
+                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>'; // Message par défaut
                 console.error('Erreur : data.files n\'est pas un tableau.', data);
             }
         })
