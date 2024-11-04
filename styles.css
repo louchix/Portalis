@@ -56,9 +56,25 @@ body {
 
 .loading-text {
     display: inline-block; /* Permet à l'animation de fonctionner correctement */
-    transition: transform 1s linear; /* Transition pour l'animation */
+    transition: color 0.3s ease; /* Transition pour la couleur */
 }
 
 .loading-text.loading {
-    animation: spin 1s linear infinite; /* Animation de rotation */
+    animation: pulse 1s infinite; /* Animation de pulsation */
+    color: #ffcc00; /* Changez la couleur pendant l'animation */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
