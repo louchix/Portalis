@@ -61,7 +61,7 @@ body {
 
 .loading-text.loading {
     animation: pulse 1s infinite; /* Animation de pulsation */
-    color: #ffcc00; /* Changez la couleur pendant l'animation */
+    color: #fc1c03; /* Changez la couleur pendant l'animation */
 }
 
 @keyframes pulse {
