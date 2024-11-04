@@ -142,80 +142,18 @@ function loadSaves() {
             const saveList = document.getElementById('saveList');
             saveList.innerHTML = ''; // Réinitialiser la liste
 
-            if (Array.isArray(data.files)) { // Vérifiez que data.files est un tableau
-                const fileStatsPromises = data.files.map(file => {
-                    const filePath = `/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/${file}`;
-                    return getFileStats(filePath).then(stats => ({
-                        file,
-                        date: stats.date,
-                        size: stats.size,
-                        creationTime: stats.creationTime // Ajoutez la date de création pour le tri
-                    }));
-                });
-
-                // Attendre que toutes les promesses soient résolues
-                return Promise.all(fileStatsPromises).then(fileStats => {
-                    // Trier les fichiers par date de création (du plus récent au plus ancien)
-                    fileStats.sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime));
-
-                    // Utiliser un Set pour filtrer les doublons
-                    const displayedFiles = new Set();
-
-                    // Afficher les fichiers triés
-                    fileStats.forEach(({ file, date, size }) => {
-                        if (!displayedFiles.has(file)) { // Vérifiez si le fichier a déjà été affiché
-                            displayedFiles.add(file); // Ajouter le fichier à l'ensemble
-                            const card = document.createElement('div');
-                            card.className = 'card column is-one-third'; // Ajouter la classe de carte et définir la largeur
-                            card.innerHTML = `
-                                <div class="card-content">
-                                    <h3 class="title is-4">${file}</h3>
-                                    <p>Date : ${date}</p>
-                                    <p>Poids : ${size.toFixed(2)} Mo</p> <!-- Afficher la taille en Mo avec 2 décimales -->
-                                    <a href="controlServer.php?action=download&file=${encodeURIComponent(file)}" class="button is-link">Télécharger</a>
-                                </div>
-                            `;
-                            saveList.appendChild(card);
-                        }
-                    });
+            if (data.files) {
+                data.files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                    saveList.appendChild(listItem);
                 });
             } else {
-                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
-                console.error('Erreur : data.files n\'est pas un tableau.', data);
+                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
             }
         })
         .catch(error => {
             console.error('Erreur lors du chargement des sauvegardes:', error);
-        });
-}
-
-// Fonction pour obtenir les statistiques du fichier
-function getFileStats(filePath) {
-    return fetch(`controlServer.php?action=get_file_stats&file=${encodeURIComponent(filePath)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                return {
-                    date: new Date(data.creation_time * 1000).toLocaleDateString(), // Convertir le timestamp en date
-                    size: data.size, // Utiliser la taille réelle
-                    creationTime: data.creation_time // Renvoie le timestamp pour le tri
-                };
-            } else {
-                console.error('Erreur lors de la récupération des statistiques du fichier:', data.error);
-                return {
-                    date: 'Inconnu',
-                    size: 'Inconnu',
-                    creationTime: 0 // Valeur par défaut pour le tri
-                };
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des statistiques du fichier:', error);
-            return {
-                date: 'Inconnu',
-                size: 'Inconnu',
-                creationTime: 0 // Valeur par défaut pour le tri
-            };
         });
 }
 

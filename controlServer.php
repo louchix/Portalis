@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         $saveDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server';
         if (is_dir($saveDir)) {
             $files = array_diff(scandir($saveDir), array('..', '.')); // Liste des fichiers
-            echo json_encode(['files' => array_values($files)]); // Assurez-vous de renvoyer un tableau
+            echo json_encode(['files' => $files]);
         } else {
             echo json_encode(['error' => 'Le répertoire de sauvegarde n\'existe pas.']);
         }
@@ -88,20 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             exit;
         } else {
             echo json_encode(['error' => 'Le fichier n\'existe pas.']);
-        }
-    } elseif ($action === 'get_file_stats' && isset($_GET['file'])) {
-        $file = basename($_GET['file']); // Sécuriser le nom du fichier
-        $filePath = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/$file";
-
-        if (file_exists($filePath)) {
-            $fileStats = stat($filePath); // Obtenir les statistiques du fichier
-            echo json_encode([
-                'success' => true,
-                'creation_time' => $fileStats['ctime'], // Date de création
-                'size' => $fileStats['size'] / 1048576 // Taille en Mo (1 Mo = 1024 * 1024 octets)
-            ]);
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Le fichier n\'existe pas.']);
         }
     }
 }
