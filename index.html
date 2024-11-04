@@ -51,22 +51,34 @@
             });
 
             // Vérification de l'état du serveur
+            checkServerStatus(); // Appel initial pour vérifier l'état du serveur
+
+            // Vérifier l'état du serveur toutes les 10 secondes
+            setInterval(checkServerStatus, 10000);
+        });
+
+        function checkServerStatus() {
+            console.log('Vérification de l\'état du serveur...');
             fetch('controlServer.php?action=status')
                 .then(response => response.text())
                 .then(status => {
                     const serverStatusDiv = document.getElementById('serverStatus');
                     if (status.includes('Serveur ON')) {
-                        serverStatusDiv.classList.remove('is-info');
-                        serverStatusDiv.classList.remove('is-danger');
+                        serverStatusDiv.classList.remove('is-info', 'is-danger');
                         serverStatusDiv.classList.add('is-success'); // Changer en vert
-                    } else {
-                        serverStatusDiv.classList.remove('is-info');
-                        serverStatusDiv.classList.remove('is-success');
+                    } else if (status.includes('Serveur OFF')) {
+                        serverStatusDiv.classList.remove('is-info', 'is-success');
                         serverStatusDiv.classList.add('is-danger'); // Changer en rouge
+                    } else {
+                        serverStatusDiv.classList.remove('is-info', 'is-success', 'is-danger');
+                        serverStatusDiv.classList.add('is-info'); // État inconnu
                     }
                     serverStatusDiv.textContent = `État du serveur : ${status}`;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la vérification de l\'état du serveur:', error);
                 });
-        });
+        }
     </script>
     <script src="script.js"></script>
 </body>
