@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         logMessage("Exécution de la commande: $command", $logOutput);
         $output = shell_exec($command);
         logMessage("Résultat de l'action: $output", $logOutput);
-        echo json_encode(['message' => 'Serveur redémarré avec succès.']);
+        echo 'Serveur redémarré avec succès.';
     }
 }
 ?>
