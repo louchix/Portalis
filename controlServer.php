@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 function logMessage($message, &$logOutput) {
     error_log($message, 3, '/var/log/controlServer.log');
     $logOutput .= $message . "\n";
+    error_log($message, 3, '/home/sfserver/script/execution.log');
 }
 
 $logOutput = "";
