@@ -78,3 +78,20 @@ body {
         opacity: 1;
     }
 }
+
+/* Styles pour le footer */
+.footer {
+    background-color: #f5f5f5; /* Couleur de fond du footer */
+    padding: 20px; /* Espacement interne */
+    position: relative; /* Position relative pour le positionnement */
+    bottom: 0; /* Positionner en bas */
+    width: 100%; /* Prendre toute la largeur */
+    text-align: center; /* Centrer le texte */
+    border-top: 1px solid #ddd; /* Bordure supérieure */
+}
+
+.footer p {
+    margin: 0; /* Supprimer la marge par défaut */
+    color: #333; /* Couleur du texte */
+    font-size: 1em; /* Taille de la police */
+}
