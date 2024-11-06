@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     checkServerStatus();
     // Appeler la fonction pour charger les sauvegardes
     loadSaves();
+
+    // Exemple de version, vous pouvez le mettre à jour dynamiquement
+    const version = "2.0.0"; // Remplacez par la version actuelle
+
+    // Mettre à jour le footer avec la version
+    document.getElementById('version').textContent = `Version: ${version}`;
 });
 
 // Définition de la fonction checkServerStatus
