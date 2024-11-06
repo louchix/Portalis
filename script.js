@@ -60,6 +60,8 @@ function uploadBlueprint() {
         console.log('Réponse du serveur traitée.');
         console.log('Logs du serveur :\n' + data);
         alert(data.split('\n')[0]); // Affiche uniquement le premier message à l'utilisateur
+        // Recharger la liste des sauvegardes après un upload réussi
+        listSaves();
     })
     .catch(error => {
         console.error('Erreur:', error);
@@ -85,6 +87,8 @@ function controlServer(action) {
         console.log('Réponse du serveur traitée.');
         console.log('Logs du serveur :\n' + data);
         alert(data.split('\n')[0]); // Affiche uniquement le premier message à l'utilisateur
+        // Recharger la liste des sauvegardes après une action de serveur
+        listSaves();
     })
     .catch(error => {
         console.error('Erreur:', error);
@@ -159,55 +163,6 @@ function listSaves() {
             saveListElement.innerHTML = '<li>Erreur lors de la récupération des sauvegardes.</li>'; // Afficher un message d'erreur
         });
 }
-
-function loadSaves() {
-    fetch('controlServer.php?action=list_saves')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau : ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Données récupérées:', data); // Log des données récupérées
-            const saveList = document.getElementById('saveList');
-            saveList.innerHTML = ''; // Réinitialiser la liste
-
-            // Vérifiez si data.files est un objet et convertissez-le en tableau
-            if (data.files && typeof data.files === 'object') {
-                const filesArray = Object.values(data.files); // Convertir l'objet en tableau
-
-                if (filesArray.length > 0) {
-                    console.log('Fichiers trouvés:', filesArray); // Log des fichiers trouvés
-                    filesArray.forEach(file => {
-                        const li = document.createElement('li');
-                        
-                        // Créer un lien pour le téléchargement
-                        const downloadLink = document.createElement('a');
-                        downloadLink.textContent = file; // Nom du fichier
-                        downloadLink.href = `controlServer.php?action=download&file=${encodeURIComponent(file)}`; // URL de téléchargement
-                        downloadLink.target = '_blank'; // Ouvrir dans un nouvel onglet
-                        downloadLink.className = 'download-link'; // Ajouter une classe pour le style si nécessaire
-
-                        // Ajouter le lien au li
-                        li.appendChild(downloadLink);
-                        saveList.appendChild(li);
-                    });
-                } else {
-                    saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>'; // Message par défaut
-                }
-            } else {
-                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>'; // Message par défaut
-                console.error('Erreur : data.files n\'est pas un objet valide.', data);
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors du chargement des sauvegardes:', error);
-        });
-}
-
-// Appeler la fonction pour charger les sauvegardes
-loadSaves();
 
 // Vérifier l'état du serveur toutes les 10 secondes
 setInterval(checkServerStatus, 10000);
