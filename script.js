@@ -1,19 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM entièrement chargé et analysé.');
 
-    document.getElementById('fileInput').addEventListener('change', function() {
-        const fileNameSpan = document.querySelector('.file-name');
-        const file = this.files[0];
-        if (file) {
-            fileNameSpan.textContent = file.name;
-            console.log(`Fichier sélectionné: ${file.name}`);
-        } else {
-            fileNameSpan.textContent = 'Aucun fichier sélectionné';
-            console.log('Aucun fichier sélectionné.');
-        }
-    });
-
-    // Charger les sauvegardes dès que la page est chargée
+    // Vérifier l'état du serveur dès que la page est chargée
+    checkServerStatus();
+    // Appeler la fonction pour charger les sauvegardes
     loadSaves();
 });
 
@@ -76,29 +66,22 @@ function loadSaves() {
             return response.json(); // Traiter la réponse comme JSON
         })
         .then(data => {
-            console.log(data); // Vérifiez ce que le serveur renvoie
-            const saveListElement = document.getElementById('saveList');
-            saveListElement.innerHTML = ''; // Réinitialiser la liste
-
-            if (data.error) {
-                saveListElement.innerHTML = `<li>${data.error}</li>`;
-            } else if (data.files && Array.isArray(data.files) && data.files.length > 0) { // Vérifiez si data.files est un tableau non vide
+            const saveList = document.getElementById('saveList');
+            saveList.innerHTML = ''; // Réinitialiser la liste
+            if (data.files) {
                 data.files.forEach(file => {
-                    const li = document.createElement('li');
-                    li.textContent = file; // Ajouter chaque fichier à la liste
-                    saveListElement.appendChild(li);
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                    saveList.appendChild(listItem);
                 });
             } else {
-                saveListElement.innerHTML = '<li>Aucune sauvegarde trouvée.</li>'; // Message par défaut
+                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
             }
-            console.log('Liste des sauvegardes récupérée.');
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des sauvegardes:', error);
-            const saveListElement = document.getElementById('saveList');
-            saveListElement.innerHTML = '<li>Erreur lors de la récupération des sauvegardes.</li>'; // Afficher un message d'erreur
+            console.error('Erreur lors du chargement des sauvegardes:', error);
         });
 }
 
 // Vérifier l'état du serveur toutes les 10 secondes
-setInterval(loadSaves, 10000);
+setInterval(checkServerStatus, 10000);
