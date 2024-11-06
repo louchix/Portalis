@@ -68,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         $saveDir = '/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server';
         if (is_dir($saveDir)) {
             $files = array_diff(scandir($saveDir), array('..', '.')); // Liste des fichiers
-            echo json_encode(['files' => $files]);
             echo json_encode(['files' => array_values($files)]);
         } else {
             echo json_encode(['error' => 'Le répertoire de sauvegarde n\'existe pas.']);
@@ -90,6 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         } else {
             echo json_encode(['error' => 'Le fichier n\'existe pas.']);
         }
+    } else {
+        echo json_encode(['error' => 'Action non reconnue.']);
     }
 }
 ?>

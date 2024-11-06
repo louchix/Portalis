@@ -95,22 +95,24 @@ function loadSaves() {
             if (!response.ok) {
                 throw new Error('Erreur réseau : ' + response.statusText);
             }
-            return response.json(); // Traiter la réponse comme JSON
+            return response.text(); // Traiter la réponse comme texte d'abord
         })
         .then(data => {
+            console.log('Réponse brute du serveur:', data); // Affichez la réponse brute
+            const jsonData = JSON.parse(data); // Essayez de parser le JSON ici
             const saveList = document.getElementById('saveList');
             saveList.innerHTML = ''; // Réinitialiser la liste
 
-            if (data.files) {
-                if (Array.isArray(data.files)) {
-                    data.files.forEach(file => {
+            if (jsonData.files) {
+                if (Array.isArray(jsonData.files)) {
+                    jsonData.files.forEach(file => {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
                         saveList.appendChild(listItem);
                     });
                 } else {
                     saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
-                    console.error('Erreur : data.files n\'est pas un tableau.', data);
+                    console.error('Erreur : data.files n\'est pas un tableau.', jsonData);
                 }
             } else {
                 saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
