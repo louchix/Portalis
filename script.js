@@ -113,7 +113,7 @@ function loadSaves() {
                 if (Array.isArray(jsonData.files)) {
                     jsonData.files.forEach(file => {
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file)}">${file}</a>`;
+                        listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file.name)}">${file.name}</a> - Créé le: ${file.creation_date}`;
                         saveList.appendChild(listItem);
                     });
                 } else {
