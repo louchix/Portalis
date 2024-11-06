@@ -49,4 +49,3 @@ Puis rajouter ces lignes:
    www-data ALL=(sfserver) NOPASSWD: /bin/mkdir
    www-data ALL=(sfserver) NOPASSWD: /bin/chown
    www-data ALL=(sfserver) NOPASSWD: /home/sfserver
-
