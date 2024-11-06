@@ -155,6 +155,8 @@ function listSaves() {
         })
         .catch(error => {
             console.error('Erreur lors de la récupération des sauvegardes:', error);
+            const saveListElement = document.getElementById('saveList');
+            saveListElement.innerHTML = '<li>Erreur lors de la récupération des sauvegardes.</li>'; // Afficher un message d'erreur
         });
 }
 
