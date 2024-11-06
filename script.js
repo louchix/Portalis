@@ -7,6 +7,38 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSaves();
 });
 
+// Définition de la fonction checkServerStatus
+function checkServerStatus() {
+    console.log('Vérification de l\'état du serveur...');
+    fetch('controlServer.php?action=status')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.statusText);
+            }
+            return response.json(); // Traiter la réponse comme JSON
+        })
+        .then(data => {
+            const statusElement = document.getElementById('serverStatus');
+            // Réinitialiser les classes avant d'ajouter la nouvelle classe
+            statusElement.classList.remove('is-info', 'is-success', 'is-danger');
+
+            if (data.status === 'ON') {
+                statusElement.classList.add('is-success'); // Changer en vert
+                statusElement.textContent = 'État du serveur : Serveur ON';
+            } else if (data.status === 'OFF') {
+                statusElement.classList.add('is-danger'); // Changer en rouge
+                statusElement.textContent = 'État du serveur : Serveur OFF';
+            } else {
+                statusElement.classList.add('is-info'); // État inconnu
+                statusElement.textContent = `État du serveur : ${data.message}`;
+            }
+            console.log(`État du serveur récupéré : ${data.status}`);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la vérification de l\'état du serveur:', error);
+        });
+}
+
 function uploadBlueprint() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
