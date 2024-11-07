@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSaves();
 
     // Exemple de version, vous pouvez le mettre à jour dynamiquement
-    const version = "2.0.2d"; // Remplacez par la version actuelle
+    const version = "2.0.4"; // Remplacez par la version actuelle
 
     // Mettre à jour le footer avec la version
     document.getElementById('version').textContent = `Version: ${version}`;
