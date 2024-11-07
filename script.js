@@ -111,6 +111,9 @@ function loadSaves() {
 
             if (jsonData.files) {
                 if (Array.isArray(jsonData.files)) {
+                    // Trier les fichiers par date de création, du plus récent au plus ancien
+                    jsonData.files.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+
                     jsonData.files.forEach(file => {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file.name)}">${file.name}</a> - Créé le: ${file.creation_date}`;
