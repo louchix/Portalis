@@ -128,16 +128,24 @@ function loadSaves() {
                     jsonData.files.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
                     jsonData.files.forEach(file => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file.name)}">${file.name}</a> - Créé le: ${file.creation_date}`;
-                        saveList.appendChild(listItem);
+                        const column = document.createElement('div');
+                        column.className = 'column is-one-quarter'; // Ajouter la classe de colonne
+
+                        column.innerHTML = `
+                            <div class="card">
+                                <div class="card-title">${file.name}</div>
+                                <p>Date : ${file.creation_date}</p>
+                                <button class="button is-link card-button" onclick="downloadBackup('${encodeURIComponent(file.name)}')">Télécharger</button>
+                            </div>
+                        `;
+                        saveList.appendChild(column);
                     });
                 } else {
-                    saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                    saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                     console.error('Erreur : data.files n\'est pas un tableau.', jsonData);
                 }
             } else {
-                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
             }
         })
         .catch(error => {
@@ -147,3 +155,11 @@ function loadSaves() {
 
 // Vérifier l'état du serveur toutes les 10 secondes
 setInterval(checkServerStatus, 10000);
+
+function downloadBackup(fileName) {
+    // Créer une URL pour le téléchargement
+    const url = `controlServer.php?action=download&file=${encodeURIComponent(fileName)}`;
+    
+    // Ouvrir une nouvelle fenêtre ou un nouvel onglet pour le téléchargement
+    window.open(url, '_blank');
+}
