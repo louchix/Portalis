@@ -153,3 +153,11 @@ function loadSaves() {
 
 // Vérifier l'état du serveur toutes les 10 secondes
 setInterval(checkServerStatus, 10000);
+
+function downloadBackup(fileName) {
+    // Créer une URL pour le téléchargement
+    const url = `controlServer.php?action=download&file=${encodeURIComponent(fileName)}`;
+    
+    // Ouvrir une nouvelle fenêtre ou un nouvel onglet pour le téléchargement
+    window.open(url, '_blank');
+}
