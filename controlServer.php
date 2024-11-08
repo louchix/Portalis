@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             echo json_encode(['error' => 'Le répertoire de sauvegarde n\'existe pas.']);
         }
     } elseif ($action === 'download' && isset($_GET['file'])) {
-        $file = basename($_GET['file']); // Sécuriser le nom du fichier
+        $file = urldecode(basename($_GET['file'])); // Sécuriser le nom du fichier et décoder
         $filePath = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/$file";
 
         // Debugging
