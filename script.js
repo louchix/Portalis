@@ -128,16 +128,22 @@ function loadSaves() {
                     jsonData.files.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
                     jsonData.files.forEach(file => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `<a href="controlServer.php?action=download&file=${encodeURIComponent(file.name)}">${file.name}</a> - Créé le: ${file.creation_date}`;
-                        saveList.appendChild(listItem);
+                        const card = document.createElement('div');
+                        card.className = 'card'; // Ajouter la classe card
+
+                        card.innerHTML = `
+                            <div class="card-title">${file.name}</div>
+                            <p>Date : ${file.creation_date}</p>
+                            <button class="button is-link card-button" onclick="downloadBackup('${encodeURIComponent(file.name)}')">Télécharger</button>
+                        `;
+                        saveList.appendChild(card);
                     });
                 } else {
-                    saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                    saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
                     console.error('Erreur : data.files n\'est pas un tableau.', jsonData);
                 }
             } else {
-                saveList.innerHTML = '<li>Aucune sauvegarde trouvée.</li>';
+                saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';
             }
         })
         .catch(error => {
