@@ -85,6 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         $file = basename($_GET['file']); // Sécuriser le nom du fichier
         $filePath = "/home/sfserver/.config/Epic/FactoryGame/Saved/SaveGames/server/$file";
 
+        // Debugging
+        error_log("Tentative de téléchargement du fichier: $filePath");
+
         if (file_exists($filePath)) {
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
