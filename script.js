@@ -128,15 +128,17 @@ function loadSaves() {
                     jsonData.files.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
                     jsonData.files.forEach(file => {
-                        const card = document.createElement('div');
-                        card.className = 'card'; // Ajouter la classe card
+                        const column = document.createElement('div');
+                        column.className = 'column is-one-quarter'; // Ajouter la classe de colonne
 
-                        card.innerHTML = `
-                            <div class="card-title">${file.name}</div>
-                            <p>Date : ${file.creation_date}</p>
-                            <button class="button is-link card-button" onclick="downloadBackup('${encodeURIComponent(file.name)}')">Télécharger</button>
+                        column.innerHTML = `
+                            <div class="card">
+                                <div class="card-title">${file.name}</div>
+                                <p>Date : ${file.creation_date}</p>
+                                <button class="button is-link card-button" onclick="downloadBackup('${encodeURIComponent(file.name)}')">Télécharger</button>
+                            </div>
                         `;
-                        saveList.appendChild(card);
+                        saveList.appendChild(column);
                     });
                 } else {
                     saveList.innerHTML = '<p>Aucune sauvegarde trouvée.</p>';

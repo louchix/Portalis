@@ -40,12 +40,14 @@
             </div>
             <div class="box">
                 <h2 class="title is-4">Sauvegardes du Serveur</h2>
-                <div id="saveList">
+                <div class="columns is-multiline" id="saveList">
                     <!-- Exemple de carte pour une sauvegarde -->
-                    <div class="card">
-                        <div class="card-title">Sauvegarde 1</div>
-                        <p>Date : 2023-10-01</p>
-                        <button class="button is-link card-button" onclick="downloadBackup('sauvegarde1.zip')">Télécharger</button>
+                    <div class="column is-one-quarter">
+                        <div class="card">
+                            <div class="card-title">Sauvegarde 1</div>
+                            <p>Date : 2023-10-01</p>
+                            <button class="button is-link card-button" onclick="downloadBackup('sauvegarde1.zip')">Télécharger</button>
+                        </div>
                     </div>
                     <!-- Répétez pour chaque sauvegarde -->
                 </div>
