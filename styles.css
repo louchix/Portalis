@@ -95,3 +95,43 @@ body {
     color: #333; /* Couleur du texte */
     font-size: 1em; /* Taille de la police */
 }
+
+.box {
+    border: 1px solid #ddd; /* Bordure autour de la boîte */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 15px; /* Espacement interne */
+    background-color: #ffffff; /* Couleur de fond blanche */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+#saveList {
+    list-style-type: none; /* Supprimer les puces de la liste */
+    padding: 0; /* Supprimer le remplissage par défaut */
+}
+
+#saveList li {
+    padding: 10px; /* Espacement interne pour chaque élément de la liste */
+    border-bottom: 1px solid #eee; /* Ligne de séparation entre les éléments */
+}
+
+#saveList li:last-child {
+    border-bottom: none; /* Supprimer la ligne de séparation pour le dernier élément */
+}
+
+.card {
+    border: 1px solid #ddd; /* Bordure autour de la carte */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 15px; /* Espacement interne */
+    background-color: #ffffff; /* Couleur de fond blanche */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    margin-bottom: 15px; /* Espacement entre les cartes */
+}
+
+.card-title {
+    font-size: 1.2em; /* Taille de la police pour le titre */
+    margin-bottom: 10px; /* Espacement sous le titre */
+}
+
+.card-button {
+    margin-top: 10px; /* Espacement au-dessus du bouton */
+}

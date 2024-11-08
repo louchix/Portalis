@@ -5,13 +5,26 @@ document.addEventListener('DOMContentLoaded', function() {
     checkServerStatus();
     // Appeler la fonction pour charger les sauvegardes
     loadSaves();
-
-    // Exemple de version, vous pouvez le mettre à jour dynamiquement
-    const version = "2.0.4"; // Remplacez par la version actuelle
-
-    // Mettre à jour le footer avec la version
-    document.getElementById('version').textContent = `Version: ${version}`;
+    // Charger la version depuis le fichier version.txt
+    loadVersion();
 });
+
+// Fonction pour charger la version depuis le fichier version.txt
+function loadVersion() {
+    fetch('script/version.txt')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(version => {
+            document.getElementById('version').textContent = `Version: ${version.trim()}`; // Mettre à jour le footer
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement de la version:', error);
+        });
+}
 
 // Définition de la fonction checkServerStatus
 function checkServerStatus() {
