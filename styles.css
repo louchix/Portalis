@@ -117,3 +117,21 @@ body {
 #saveList li:last-child {
     border-bottom: none; /* Supprimer la ligne de séparation pour le dernier élément */
 }
+
+.card {
+    border: 1px solid #ddd; /* Bordure autour de la carte */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 15px; /* Espacement interne */
+    background-color: #ffffff; /* Couleur de fond blanche */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    margin-bottom: 15px; /* Espacement entre les cartes */
+}
+
+.card-title {
+    font-size: 1.2em; /* Taille de la police pour le titre */
+    margin-bottom: 10px; /* Espacement sous le titre */
+}
+
+.card-button {
+    margin-top: 10px; /* Espacement au-dessus du bouton */
+}
