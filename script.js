@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fonction pour charger la version depuis le fichier version.txt
 function loadVersion() {
-    fetch('/home/sfserver/script/version.txt')
+    fetch('script/version.txt')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erreur réseau : ' + response.statusText);
